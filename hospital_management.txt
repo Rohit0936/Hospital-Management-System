@@ -1,0 +1,50 @@
+Admin:-
+CREATE TABLE Admin(aid INT PRIMARY KEY Auto_Increment,Name VARCHAR(100),Contact varchar(10) 
+unique not null,adminUser_Name varchar(100) unique not null,Admin_Password varchar(100) unique not null);
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+User:-
+CREATE TABLE User(uid INT PRIMARY KEY AUTO_INCREMENT,UserName varchar(100) unique not null,user_password varchar(100) unique not null);
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Doctor:-
+create table Doctor(Did int PRIMARY KEY Auto_Increment,doctor_name varchar(100) not null,doctor_email varchar(100) not null unique,doctor_specialization VARCHAR(100)NOT NULL,
+doctor_contact varchar(10) unique not null,doctor_Experience INT not null,Status BOOLEAN DEFAULT(TRUE),
+Doctor_Image varchar(100),uid int,foreign key(uid) references user(uid),aid int,foreign key(aid) references admin(aid));
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Room:-
+ create table room(rid int primary key auto_increment,Room_type enum('ICU','AC','General') 
+ not null,room_status enum('available','not available'),Room_Charges int not null);
+ -------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+ Nurse:-
+ create table nurse(nid int primary key auto_increment,nurse_name varchar(100) not null,nurse_email varchar(100) unique not null,
+ nurse_contact varchar(10) unique not null,nurse_shift enum('Day','Night'));
+ 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+Reception:-
+
+ create table reception(rid int primary key auto_increment,reception_name varchar(100) not null,reception_contact varchar(100) unique not null,
+ reception_email varchar(100) unique not null,uid int,foreign key(uid) references user(uid),aid int,foreign key(aid) references admin(aid) on update cascade on delete set null);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+Patient:-
+
+create table patient(pid int primary key auto_increment,patient_name varchar(100) not null,patient_age int not null,patient_gender enum('male','female') not null,
+patient_contact varchar(10) unique not null,patient_issue varchar(255) not null,admitted_date date not null,discharge_date date not null,
+rid int,foreign key(rid) references room(rid),nid int,foreign key(nid) references nurse(nid),Did int,foreign key(Did) references Doctor(Did),Status enum('Admit','Discharge'));
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+medical:-
+
+CREATE TABLE medical(mid int primary key auto_increment,pid int,foreign key(pid) references patient(pid),
+medicine_name varchar(100) unique not null,medicine_price decimal(10,2));
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+Bill:-
+
+CREATE TABLE Bill(bid int primary key auto_increment,pid int,foreign key(pid) references patient(pid),room_charges DECIMAL(10,2),treatment_charges decimal(10,2),
+nurse_charges decimal(10,2),medicine_charges decimal(10,2),total_amount decimal(10,2),billing_date date);
