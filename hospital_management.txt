@@ -11,12 +11,12 @@ CREATE TABLE User(uid INT PRIMARY KEY AUTO_INCREMENT,UserName varchar(100) uniqu
 Doctor:-
 create table Doctor(Did int PRIMARY KEY Auto_Increment,doctor_name varchar(100) not null,doctor_email varchar(100) not null unique,doctor_specialization VARCHAR(100)NOT NULL,
 doctor_contact varchar(10) unique not null,doctor_Experience INT not null,Status BOOLEAN DEFAULT(TRUE),
-Doctor_Image varchar(100),uid int,foreign key(uid) references user(uid),aid int,foreign key(aid) references admin(aid));
+Doctor_Image varchar(100),uid int,foreign key(uid) references user(uid) on delete cascade,aid int,foreign key(aid) references admin(aid));
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Room:-
- create table room(rid int primary key auto_increment,Room_type enum('ICU','AC','General') 
+ create table room(room_id int primary key auto_increment,Room_type enum('ICU','AC','General') 
  not null,room_status enum('available','not available'),Room_Charges int not null);
  -------------------------------------------------------------------------------------------------------------------------------------------------------------
  
@@ -35,7 +35,7 @@ Patient:-
 
 create table patient(pid int primary key auto_increment,patient_name varchar(100) not null,patient_age int not null,patient_gender enum('male','female') not null,
 patient_contact varchar(10) unique not null,patient_issue varchar(255) not null,admitted_date date not null,discharge_date date not null,
-rid int,foreign key(rid) references room(rid),nid int,foreign key(nid) references nurse(nid),Did int,foreign key(Did) references Doctor(Did),Status enum('Admit','Discharge'));
+room_id int,foreign key(room_id) references room(room_id),nid int,foreign key(nid) references nurse(nid),Did int,foreign key(Did) references Doctor(Did),Status enum('Admit','Discharge'));
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 medical:-
