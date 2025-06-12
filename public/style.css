@@ -1,0 +1,112 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f4f7f9;
+    line-height: 1.6;
+    color: #333;
+  }
+  
+  .navbar-custom {
+    background: linear-gradient(90deg, #007bff 0%, #0056b3 100%);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+  
+  /* Brand Text */
+  .navbar-brand {
+    font-weight: 600;
+    color: #fff !important;
+    font-size: 18px;
+  }
+  
+  /* Button Style */
+  .btn-custom {
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 20px;
+    padding: 6px 18px;
+    background-color: #ffffff;
+    color: #0056b3;
+    border: 1px solid transparent;
+    transition: 0.3s ease;
+    margin-left: 10px;
+  }
+  
+  .btn-custom:hover {
+    background-color: #0056b3;
+    color: #ffffff;
+    border-color: #ffffff;
+  }
+  
+  
+  
+  /* Info/Image Section */
+  .image-info-section img {
+    max-width: 100%;
+    border-radius: 10px;
+  }
+  
+  
+  .image-info-section ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .image-info-section ul li {
+    padding: 5px 0;
+    font-size: 16px;
+  }
+  
+  /* Services Section */
+  .services-section .card {
+    border: none;
+    border-radius: 15px;
+    transition: transform 0.3s ease;
+  }
+  
+  .services-section .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.1);
+  }
+  
+  .services-section .card img {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  /* Appointment Form */
+  .appointment-form {
+    background-color: #ffffff;
+    border-left: 5px solid #007bff;
+    border-radius: 10px;
+  }
+  
+  .appointment-form h2 {
+    color: #0056b3;
+    font-weight: 600;
+  }
+  
+  .appointment-form .form-control,
+  .appointment-form .form-select {
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+  
+  .appointment-form button {
+    background-color: #007bff;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 30px;
+    color: #fff;
+    font-weight: 500;
+  }
+  
+  .appointment-form button:hover {
+    background-color: #0056b3;
+  }
