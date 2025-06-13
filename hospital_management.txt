@@ -4,7 +4,7 @@ unique not null,adminUser_Name varchar(100) unique not null,Admin_Password varch
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 User:-
-CREATE TABLE User(uid INT PRIMARY KEY AUTO_INCREMENT,UserName varchar(100) unique not null,user_password varchar(100) unique not null);
+CREATE TABLE User(uid INT PRIMARY KEY AUTO_INCREMENT,UserName varchar(100) unique not null,user_password varchar(100) unique not null,Role enum('Doctor','Reception'));
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
