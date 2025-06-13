@@ -1,5 +1,9 @@
 let model=require("../model/regmodel.js")
 
+exports.admindashbord=(req,res)=>{
+    res.render("admindashbord.ejs");
+}
+
 exports.home=(req,res)=>{
     res.render("home.ejs");
 };
@@ -15,6 +19,16 @@ exports.reg_doc=(req,res)=>{
 exports.show_doc=(req,res)=>{
     res.render("show_doc.ejs");
 }
+
+exports.reg_rec=(req,res)=>{
+    res.render("reg_rec.ejs");
+}
+
+exports.show_rec=(req,res)=>{
+    res.render("show_rec.ejs");
+}
+
+
 
 exports.loginuser=(req,res)=>{
 
