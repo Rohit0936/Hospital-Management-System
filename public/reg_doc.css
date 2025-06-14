@@ -1,0 +1,109 @@
+body {
+  background-color: #f4f6f8;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.page-wrapper {
+  margin-left: 250px;
+  padding: 20px;
+}
+
+.doctor-container {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.form-container,
+.image-container {
+  flex: 1 1 300px;
+  padding: 20px;
+  border-radius: 8px;
+  min-width: 280px;
+}
+
+.form-container {
+  background: #fff;
+  max-width: 420px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.1);
+}
+
+.image-container {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-upload {
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 2px dashed #fff;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 240px;
+}
+
+.image-upload i {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.image-upload-label {
+  cursor: pointer;
+  color: #ffffff;
+  text-decoration: underline;
+  font-size: 12px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="password"] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: none;
+  border-radius: 6px;
+  background: #e9ecef;
+}
+
+button {
+  background-color: #e74c3c;
+  border: none;
+  padding: 10px 24px;
+  color: white;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #c0392b;
+}
+
+.img img{
+  width: 120px;
+  height: 120px;
+}
+
+img[alt]{
+  border: none;
+}
+@media (max-width: 768px) {
+  .page-wrapper {
+    margin-left: 0;
+  }
+
+  .doctor-container {
+    flex-direction: column;
+    padding: 10px;
+  }
+}
