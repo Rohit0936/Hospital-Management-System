@@ -20,7 +20,6 @@ body {
       top: 0;
       z-index: 1000;
       padding: 0.8rem 0;
-      /* clip-path: polygon(0 0, 100% 0, 100% 80%, 90% 100%, 80% 80%, 70% 100%, 60% 80%, 50% 100%, 40% 80%, 30% 100%, 20% 80%, 10% 100%, 0 80%); */
     }
 
     .navbar-brand {
@@ -177,4 +176,21 @@ body {
   height: 200px;
   object-fit: cover;
 }
+
+
+/* Footer section */
+
+ 
+
+  .input-group input {
+    border-radius: 5px;
+  }
+
+  
+
+  
+
+  
+
+
 
