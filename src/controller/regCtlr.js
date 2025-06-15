@@ -4,6 +4,15 @@ let model = require("../model/regmodel.js");
 exports.home = (req, res) => {
      res.render("home.ejs");
  };
+let model=require("../model/regmodel.js")
+
+exports.admindashbord=(req,res)=>{
+    res.render("admindashbord.ejs");
+}
+
+exports.home=(req,res)=>{
+    res.render("home.ejs");
+};
 
 
 

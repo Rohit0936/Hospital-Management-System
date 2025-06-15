@@ -18,9 +18,14 @@ let storage=multer.diskStorage({
 let upload=multer({storage:storage});
 
 router.get("/",control.home);
+router.get("/home",control.home);
+
+router.get("/admindashbord",control.admindashbord);
 router.get("/login",control.login);
 router.get("/reg_doc",control.reg_doc);
 router.get("/show_doc",control.show_doc);
+router.get("/reg_rec",control.reg_rec);
+router.get("/show_rec",control.show_rec);
 router.post("/loginuser",control.loginuser);
 router.post("/regdoctor",upload.single("imag"),control.regDoctor);
 router.get("/showdoctor",control.showDoctor);
