@@ -15,6 +15,7 @@
       margin-left: 250px; /* Same as sidebar width */
       padding: 20px;
       
+      
 
     }
 
@@ -41,6 +42,7 @@
   <!-- Include admin sidebar and navbar -->
   <%- include('admindashbord') %>
   
+  
   <!-- Page Wrapper Starts after admin dashboard's .main-content open tag -->
   <div class="page-wrapper">
     <div class="container py-4">
@@ -65,7 +67,7 @@
         if(typeof(result)=="undefined" || result.length==0)
         {
      %>
-        <h1 style="width: 100%; text-align: center;">Doctor Not Avaiable 😑</h1>
+        <h1 style="width: 100%; text-align: center;">Doctor Not Found 😑</h1>
      <%
         }
         else

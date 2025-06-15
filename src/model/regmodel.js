@@ -1,6 +1,7 @@
 
 
 
+
 let conn=require("../config/db.js");
 const user = require("../services/reguser_services.js");
 
@@ -23,9 +24,11 @@ exports.loginuser=(username,password,department)=>{
         let name=user[0];
         let email=user[1];
         let Specialization=user[2];
+        
         let contact=user[3];
         let experience=user[4];
         let img=user[5];
+       
        
         let password=user[7];
        //  console.log(password);

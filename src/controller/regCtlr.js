@@ -1,4 +1,4 @@
- const e = require("express");
+const e = require("express");
 let model = require("../model/regmodel.js");
  let Doctor = require("../services/reg_doc_services.js");
 exports.home = (req, res) => {
