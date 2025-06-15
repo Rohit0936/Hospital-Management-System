@@ -9,11 +9,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
   <link rel="stylesheet" href="/sidebar.css" />
   <link rel="stylesheet" href="/show_doc.css" />
+  <script type="text/javascript" src="searchdoc.js"></script>
   <style>
     .page-wrapper {
       margin-left: 250px; /* Same as sidebar width */
       padding: 20px;
-        background-color: #2c3e50;
+      
 
     }
 
@@ -22,144 +23,103 @@
         margin-left: 0;
       }
     }
+
+    h1{
+     
+      width:100%; 
+      text-align: center;
+    }
+
+    .search{
+      display: inline-flex;
+      width: 100%;
+    }
   </style>
 </head>
 <body>
 
   <!-- Include admin sidebar and navbar -->
   <%- include('admindashbord') %>
-
+  
   <!-- Page Wrapper Starts after admin dashboard's .main-content open tag -->
   <div class="page-wrapper">
     <div class="container py-4">
-      <h1 class="text-center fw-bold text-uppercase mb-4 text-white">Doctors</h1>
-
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+      <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+          <form class=>
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" onkeyup="doc(this.value)">
+          </form>
+          <nav >
+            <form class="container-fluid justify-content-start">
+              <a href="/showdoctor?status=1" class="btn btn-sm btn-outline-secondary" >Avaiable</a>
+              <a href="/showdoctor?status=0" class="btn btn-sm btn-outline-secondary" >Not Avaiable</a>
+            </form>
+          </nav>
+        </div>
+      </nav>
+ <br>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4" id="main">
+        
         <!-- Sample doctor card -->
-    <div class="col">
-  <div class="card h-100 shadow doctor-card-new text-center">
-    <div class="card-body d-flex flex-column align-items-center p-4">
-      <div class="doctor-avatar mb-3">
-        <img src="mak.jpg" alt="Dr.Mak" class="img-fluid"/>
+        <%
+        if(typeof(result)=="undefined" || result.length==0)
+        {
+     %>
+        <h1 style="width: 100%; text-align: center;">Doctor Not Avaiable 😑</h1>
+     <%
+        }
+        else
+        {
+      %>
+        
+       
+         <%
+         result.forEach((item,index)=>
+         {
+         %>
+     
+    <div class="col" id="se1">
+      
+      <div class="card h-100 shadow doctor-card-new text-center">
+        <div class="card-body d-flex flex-column align-items-center p-4">
+          <div class="doctor-avatar mb-3">
+            <img src="<%=item.Doctor_Image%>" alt="Dr.Mak" class="img-fluid"/>
+          </div>
+          <h5 class="fw-bold text-dark mb-1">DR.<%=item.doctor_name%></h5>
+          <p class="text-muted mb-2"><i class="fas fa-stethoscope me-1 text-danger"></i> <%=item.doctor_specialization%></p>
+          <p class="mb-1"><i class="fas fa-phone me-1 text-primary"></i> +91 <%=item.doctor_contact%></p>
+          <p class="mb-1"><i class="fas fa-briefcase me-1 text-success"></i> <%=item.doctor_Experience%> years experience</p>
+          <p class="mb-3"><i class="fas fa-envelope me-1 text-warning"></i><%=item.doctor_email%></p>
+          <%
+             if(item.Status==1)
+             {
+          %>
+
+          <h6><label >Status:</label>   <label for="" style="color: green;">Avaiable</label></h6>
+          <%
+             }
+             else
+             {
+
+            %>
+            <h6><label >Status:</label>   <label for="" style="color: red;">Not Avaiable</label></h6>
+            <%
+             }
+          %>
+        </div>
+        <div class="card-footer bg-white d-flex justify-content-center gap-2">
+          <a href="/updatedoctor?did=<%=item.Did%>" class="btn btn-outline-primary btn-sm px-3"><i class="fas fa-pen me-1"></i>Edit</a>
+          <a href="/deletedoctor?uid=<%=item.uid%>" class="btn btn-outline-danger btn-sm px-3"><i class="fas fa-trash me-1"></i>Delete</a>
+        </div>
       </div>
-      <h5 class="fw-bold text-dark mb-1">Dr.Mak</h5>
-      <p class="text-muted mb-2"><i class="fas fa-stethoscope me-1 text-danger"></i> Dermatologist</p>
-      <p class="mb-1"><i class="fas fa-phone me-1 text-primary"></i> +91 9876543210</p>
-      <p class="mb-1"><i class="fas fa-briefcase me-1 text-success"></i> 5 years experience</p>
-      <p class="mb-3"><i class="fas fa-envelope me-1 text-warning"></i> mak12@.com</p>
+
     </div>
-    <div class="card-footer bg-white d-flex justify-content-center gap-2">
-      <button class="btn btn-outline-primary btn-sm px-3"><i class="fas fa-pen me-1"></i>Edit</button>
-      <button class="btn btn-outline-danger btn-sm px-3"><i class="fas fa-trash me-1"></i>Delete</button>
-    </div>
-  </div>
-</div>
-
-
-
-
- <div class="col">
-  <div class="card h-100 shadow doctor-card-new text-center">
-    <div class="card-body d-flex flex-column align-items-center p-4">
-      <div class="doctor-avatar mb-3">
-        <img src="mak.jpg" alt="Dr.Mak" class="img-fluid"/>
-      </div>
-      <h5 class="fw-bold text-dark mb-1">Dr.Mak</h5>
-      <p class="text-muted mb-2"><i class="fas fa-stethoscope me-1 text-danger"></i> Dermatologist</p>
-      <p class="mb-1"><i class="fas fa-phone me-1 text-primary"></i> +91 9876543210</p>
-      <p class="mb-1"><i class="fas fa-briefcase me-1 text-success"></i> 5 years experience</p>
-      <p class="mb-3"><i class="fas fa-envelope me-1 text-warning"></i> mak12@.com</p>
-    </div>
-    <div class="card-footer bg-white d-flex justify-content-center gap-2">
-      <button class="btn btn-outline-primary btn-sm px-3"><i class="fas fa-pen me-1"></i>Edit</button>
-      <button class="btn btn-outline-danger btn-sm px-3"><i class="fas fa-trash me-1"></i>Delete</button>
-    </div>
-  </div>
-</div>
-
-
-
-
- <div class="col">
-  <div class="card h-100 shadow doctor-card-new text-center">
-    <div class="card-body d-flex flex-column align-items-center p-4">
-      <div class="doctor-avatar mb-3">
-        <img src="mak.jpg" alt="Dr.Mak" class="img-fluid"/>
-      </div>
-      <h5 class="fw-bold text-dark mb-1">Dr.Mak</h5>
-      <p class="text-muted mb-2"><i class="fas fa-stethoscope me-1 text-danger"></i> Dermatologist</p>
-      <p class="mb-1"><i class="fas fa-phone me-1 text-primary"></i> +91 9876543210</p>
-      <p class="mb-1"><i class="fas fa-briefcase me-1 text-success"></i> 5 years experience</p>
-      <p class="mb-3"><i class="fas fa-envelope me-1 text-warning"></i> mak12@.com</p>
-    </div>
-    <div class="card-footer bg-white d-flex justify-content-center gap-2">
-      <button class="btn btn-outline-primary btn-sm px-3"><i class="fas fa-pen me-1"></i>Edit</button>
-      <button class="btn btn-outline-danger btn-sm px-3"><i class="fas fa-trash me-1"></i>Delete</button>
-    </div>
-  </div>
-</div>
-
-
-
- <div class="col">
-  <div class="card h-100 shadow doctor-card-new text-center">
-    <div class="card-body d-flex flex-column align-items-center p-4">
-      <div class="doctor-avatar mb-3">
-        <img src="mak.jpg" alt="Dr.Mak" class="img-fluid"/>
-      </div>
-      <h5 class="fw-bold text-dark mb-1">Dr.Mak</h5>
-      <p class="text-muted mb-2"><i class="fas fa-stethoscope me-1 text-danger"></i> Dermatologist</p>
-      <p class="mb-1"><i class="fas fa-phone me-1 text-primary"></i> +91 9876543210</p>
-      <p class="mb-1"><i class="fas fa-briefcase me-1 text-success"></i> 5 years experience</p>
-      <p class="mb-3"><i class="fas fa-envelope me-1 text-warning"></i> mak12@.com</p>
-    </div>
-    <div class="card-footer bg-white d-flex justify-content-center gap-2">
-      <button class="btn btn-outline-primary btn-sm px-3"><i class="fas fa-pen me-1"></i>Edit</button>
-      <button class="btn btn-outline-danger btn-sm px-3"><i class="fas fa-trash me-1"></i>Delete</button>
-    </div>
-  </div>
-</div>
-
-
- <div class="col">
-  <div class="card h-100 shadow doctor-card-new text-center">
-    <div class="card-body d-flex flex-column align-items-center p-4">
-      <div class="doctor-avatar mb-3">
-        <img src="mak.jpg" alt="Dr.Mak" class="img-fluid"/>
-      </div>
-      <h5 class="fw-bold text-dark mb-1">Dr.Mak</h5>
-      <p class="text-muted mb-2"><i class="fas fa-stethoscope me-1 text-danger"></i> Dermatologist</p>
-      <p class="mb-1"><i class="fas fa-phone me-1 text-primary"></i> +91 9876543210</p>
-      <p class="mb-1"><i class="fas fa-briefcase me-1 text-success"></i> 5 years experience</p>
-      <p class="mb-3"><i class="fas fa-envelope me-1 text-warning"></i> mak12@.com</p>
-    </div>
-    <div class="card-footer bg-white d-flex justify-content-center gap-2">
-      <button class="btn btn-outline-primary btn-sm px-3"><i class="fas fa-pen me-1"></i>Edit</button>
-      <button class="btn btn-outline-danger btn-sm px-3"><i class="fas fa-trash me-1"></i>Delete</button>
-    </div>
-  </div>
-</div>
-
-
- <div class="col">
-  <div class="card h-100 shadow doctor-card-new text-center">
-    <div class="card-body d-flex flex-column align-items-center p-4">
-      <div class="doctor-avatar mb-3">
-        <img src="mak.jpg" alt="Dr.Mak" class="img-fluid"/>
-      </div>
-      <h5 class="fw-bold text-dark mb-1">Dr.Mak</h5>
-      <p class="text-muted mb-2"><i class="fas fa-stethoscope me-1 text-danger"></i> Dermatologist</p>
-      <p class="mb-1"><i class="fas fa-phone me-1 text-primary"></i> +91 9876543210</p>
-      <p class="mb-1"><i class="fas fa-briefcase me-1 text-success"></i> 5 years experience</p>
-      <p class="mb-3"><i class="fas fa-envelope me-1 text-warning"></i> mak12@.com</p>
-    </div>
-    <div class="card-footer bg-white d-flex justify-content-center gap-2">
-      <button class="btn btn-outline-primary btn-sm px-3"><i class="fas fa-pen me-1"></i>Edit</button>
-      <button class="btn btn-outline-danger btn-sm px-3"><i class="fas fa-trash me-1"></i>Delete</button>
-    </div>
-  </div>
-</div>
-
+  <%
+  });
+  %>
+  <%}%>
+  
+   
 <!-- Repeat cards as needed -->
       </div>
     </div>

@@ -65,7 +65,7 @@ body {
 
 input[type="text"],
 input[type="email"],
-input[type="tel"],
+input[type="number"],
 input[type="password"] {
   width: 100%;
   padding: 8px;
@@ -89,6 +89,14 @@ button:hover {
   background-color: #c0392b;
 }
 
+.img img{
+  width: 120px;
+  height: 120px;
+}
+
+img[alt]{
+  border: none;
+}
 @media (max-width: 768px) {
   .page-wrapper {
     margin-left: 0;
