@@ -8,9 +8,9 @@ body {
   padding: 20px;
 }
 
-
-
-
+.info{
+  color: rgb(239, 94, 94)
+}
 .doctor-container {
   margin-top: 20px;
   display: flex;

@@ -15,7 +15,6 @@
       margin-left: 250px; /* Same as sidebar width */
       padding: 20px;
       
-      
 
     }
 
@@ -42,7 +41,6 @@
   <!-- Include admin sidebar and navbar -->
   <%- include('admindashbord') %>
   
-  
   <!-- Page Wrapper Starts after admin dashboard's .main-content open tag -->
   <div class="page-wrapper">
     <div class="container py-4">
@@ -67,7 +65,7 @@
         if(typeof(result)=="undefined" || result.length==0)
         {
      %>
-        <h1 style="width: 100%; text-align: center;">Doctor Not Found 😑</h1>
+        <h1 style="width: 100%; text-align: center;">Doctor Not Avaiable 😑</h1>
      <%
         }
         else
@@ -113,76 +111,6 @@
           <a href="/updatedoctor?did=<%=item.Did%>" class="btn btn-outline-primary btn-sm px-3"><i class="fas fa-pen me-1"></i>Edit</a>
           <a href="/deletedoctor?uid=<%=item.uid%>" class="btn btn-outline-danger btn-sm px-3"><i class="fas fa-trash me-1"></i>Delete</a>
         </div>
-    <div class="col">
-  <div class="card h-100 shadow doctor-card-new text-center">
-    <div class="card-body d-flex flex-column align-items-center p-4">
-      <div class="doctor-avatar mb-3">
-        <img src="mak.jpg" alt="Dr.Mak" class="img-fluid"/>
-      </div>
-      <h5 class="fw-bold text-dark mb-1">Dr.Mak</h5>
-      <p class="text-muted mb-2"><i class="fas fa-stethoscope me-1 text-danger"></i> Dermatologist</p>
-      <p class="mb-1"><i class="fas fa-phone me-1 text-primary"></i> +91 9876543210</p>
-      <p class="mb-1"><i class="fas fa-briefcase me-1 text-success"></i> 5 years experience</p>
-      <p class="mb-3"><i class="fas fa-envelope me-1 text-warning"></i> mak12@.com</p>
-    </div>
-    <div class="card-footer bg-white d-flex justify-content-center gap-2">
-      <a href="" class="btn btn-outline-primary btn-sm px-3"><i class="fas fa-pen me-1"></i>Edit</a>
-      <a href="" class="btn btn-outline-danger btn-sm px-3"><i class="fas fa-trash me-1"></i>Delete</a>
-    </div>
-  </div>
-</div>
-
-
-
-
- <div class="col">
-  <div class="card h-100 shadow doctor-card-new text-center">
-    <div class="card-body d-flex flex-column align-items-center p-4">
-      <div class="doctor-avatar mb-3">
-        <img src="mak.jpg" alt="Dr.Mak" class="img-fluid"/>
-      </div>
-      <h5 class="fw-bold text-dark mb-1">Dr.Mak</h5>
-      <p class="text-muted mb-2"><i class="fas fa-stethoscope me-1 text-danger"></i> Dermatologist</p>
-      <p class="mb-1"><i class="fas fa-phone me-1 text-primary"></i> +91 9876543210</p>
-      <p class="mb-1"><i class="fas fa-briefcase me-1 text-success"></i> 5 years experience</p>
-      <p class="mb-3"><i class="fas fa-envelope me-1 text-warning"></i> mak12@.com</p>
-    </div>
-    <div class="card-footer bg-white d-flex justify-content-center gap-2">
-      <button class="btn btn-outline-primary btn-sm px-3"><i class="fas fa-pen me-1"></i>Edit</button>
-      <button class="btn btn-outline-danger btn-sm px-3"><i class="fas fa-trash me-1"></i>Delete</button>
-    </div>
-  </div>
-</div>
-
-
-
-
- <div class="col">
-  <div class="card h-100 shadow doctor-card-new text-center">
-    <div class="card-body d-flex flex-column align-items-center p-4">
-      <div class="doctor-avatar mb-3">
-        <img src="mak.jpg" alt="Dr.Mak" class="img-fluid"/>
-      </div>
-      <h5 class="fw-bold text-dark mb-1">Dr.Mak</h5>
-      <p class="text-muted mb-2"><i class="fas fa-stethoscope me-1 text-danger"></i> Dermatologist</p>
-      <p class="mb-1"><i class="fas fa-phone me-1 text-primary"></i> +91 9876543210</p>
-      <p class="mb-1"><i class="fas fa-briefcase me-1 text-success"></i> 5 years experience</p>
-      <p class="mb-3"><i class="fas fa-envelope me-1 text-warning"></i> mak12@.com</p>
-    </div>
-    <div class="card-footer bg-white d-flex justify-content-center gap-2">
-      <button class="btn btn-outline-primary btn-sm px-3"><i class="fas fa-pen me-1"></i>Edit</button>
-      <button class="btn btn-outline-danger btn-sm px-3"><i class="fas fa-trash me-1"></i>Delete</button>
-    </div>
-  </div>
-</div>
-
-
-
- <div class="col">
-  <div class="card h-100 shadow doctor-card-new text-center">
-    <div class="card-body d-flex flex-column align-items-center p-4">
-      <div class="doctor-avatar mb-3">
-        <img src="mak.jpg" alt="Dr.Mak" class="img-fluid"/>
       </div>
 
     </div>
@@ -200,3 +128,4 @@
 </div> <!-- This closes the .main-content opened inside admindashbord -->
 </body>
 </html>
+

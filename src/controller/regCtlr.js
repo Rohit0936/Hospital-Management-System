@@ -1,10 +1,10 @@
 const e = require("express");
 let model = require("../model/regmodel.js");
  let Doctor = require("../services/reg_doc_services.js");
+ let reception=require("../services/reg_reception.js");
 exports.home = (req, res) => {
      res.render("home.ejs");
  };
-let model=require("../model/regmodel.js")
 
 exports.admindashbord=(req,res)=>{
     res.render("admindashbord.ejs");
@@ -46,25 +46,22 @@ exports.show_doc=(req,res)=>{
     });
 }
 
- exports.regDoctor = (req, res) => {
+exports.regDoctor = async (req, res) => {
+    const u = new Doctor();
+    let image = req.file.path;
+    image = "./upload/" + image.substring(14);
 
-     const u = new Doctor();
-     let image=req.file.path;
-      image=image.substring(14,image.length);
-      image="./upload/"+image;
-    //  console.log(image);
-    // console.log("image: "+image);
-     let { name, email, Specialization, contact, experience,role, password } = req.body;
-     //console.log(name, email, specialzation, contact, experience, docImg,role, password);
-   let flag=u.regDoctor(name, email, Specialization, contact, experience, image,role, password);
-   if(flag)
-   {
-    res.render("reg_doc.ejs",{msg:"Doctor registration Successfully"});
-   }
-   else{
-    res.render("reg_doc.ejs",{msg:"Doctor registration Successfully"});
-   }
- }
+    let { name, email, Specialization, contact, experience, role, password } = req.body;
+
+    try {
+        await u.regDoctor(name, email, Specialization, contact, experience, image, role, password);
+        res.render("reg_doc.ejs", { msg: "Doctor registration Successfully" });
+    } catch (err) {
+        console.log(err);
+        res.render("reg_doc.ejs", { msg: "This user name already present" });
+    }
+};
+
 
  exports.showDoctor=(req,res)=>{
    
@@ -137,3 +134,99 @@ exports.show_doc=(req,res)=>{
         res.send("Something went wrong");
     })
  }
+
+ exports.reg_rec=(req,res)=>{
+    res.render("reg_rec.ejs",{msg:""});
+}
+
+exports.regrecep= async (req,res)=>{
+
+    let rec=new reception();
+
+    let {name,email,contact,password}=req.body;
+    let image=req.file.path;
+    image=image.substring(14,image.length);
+    image="./upload/"+image;
+     
+    
+    try
+        {
+        await rec.regReception(name,email,contact,password,image);
+         res.render("reg_rec.ejs",{msg:"Receptionists registration Successfully"});
+        }
+        catch(err){
+            
+         res.render("reg_rec.ejs",{msg:"This user name already present"});
+        }
+}
+exports.show_rec=(req,res)=>{
+
+    let flag=model.showrec();
+    flag.then((r)=>{
+        res.render("show_rec.ejs",{result:r});
+    }).catch((err)=>{
+        res.send("<h1>Something went wrong</h1>")
+    })
+}
+
+let rid;
+exports.recepudate=(req,res)=>{
+
+    let id=req.query.rid.trim();
+    rid=id;
+
+    let flag=model.showrec();
+    flag.then((r)=>{
+        r.forEach((item,index)=>{
+
+            if(parseInt(item.rid)==id)
+            {
+               
+                res.render("recepupdate.ejs",{data:item,msg:""});
+            }
+        })
+       
+    }).catch((err)=>{
+        res.send("<h1>Something went wrong</h1>")
+    })
+
+  
+}
+
+exports.recefinalpudate=(req,res)=>{
+
+   let {name,email,contact}=req.body;
+
+ let flag=model.recepudate(name,email,contact,rid);
+ flag.then((f)=>{
+     res.render("recepupdate.ejs",{data:"",msg:"Update Successfully"});
+ }).catch((err)=>{
+     res.send("<h1>Something went wrong</h1>")
+ })
+}
+
+exports.recepdelete=(req,res)=>{
+
+    let id=req.query.rid.trim();
+
+    let flag=model.recepdelete(id);
+    flag.then((r)=>{
+        res.redirect("/show_rec");
+    }).catch((err)=>{
+        res.send("<h1>Something went wrong</h1>")
+    })
+}
+
+exports.searchrecep=(req,res)=>{
+
+    let na=req.query.na.trim();
+
+    let flag=model.searchrecep(na);
+    flag.then((r)=>{
+      res.json(r);  
+    }).catch((err)=>{
+
+        res.send("<h1>Something went wrong</h1>")
+    });
+}
+ 

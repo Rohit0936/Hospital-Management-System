@@ -28,7 +28,7 @@ Room:-
 Reception:-
 
  create table reception(rid int primary key auto_increment,reception_name varchar(100) not null,reception_contact varchar(100) unique not null,
- reception_email varchar(100) unique not null,uid int,foreign key(uid) references user(uid),aid int,foreign key(aid) references admin(aid) on update cascade on delete set null);
+ reception_email varchar(100) unique not null,uid int,foreign key(uid) references user(uid) on delete cascade,aid int,foreign key(aid) references admin(aid) on update cascade on delete set null,rec_Image varhar(100));
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 Patient:-

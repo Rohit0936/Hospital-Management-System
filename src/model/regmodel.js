@@ -38,6 +38,7 @@ exports.loginuser=(username,password,department)=>{
                      if(err)
                      {
                        console.log(err);
+                       reject(err);
                      }
                      else{
                          //  console.log("Success");
@@ -189,4 +190,124 @@ exports.searchdoc=(na)=>{
               }
        });
       }) 
+}
+
+exports.regReception=(...user)=>
+       {
+             
+              let max;
+              let name=user[0];
+              let email=user[1];
+              let contact=user[2];
+              let password=user[3];
+              let img=user[4];
+              
+             //  console.log(password);
+      
+             return new Promise((resolve,reject)=>{
+                    conn.query("insert into user values('0',?,?,'Reception')",[email,password],(err,result)=>{
+                           if(err)
+                           {  
+                             console.log(err);
+                             reject(err);
+                           }
+                           else{
+                               //  console.log("Success");
+                    conn.query("select max(uid) as 'id' from user",(err,result)=>{
+             
+                           if(err)
+                           {
+                             reject(err);
+                           }
+                           else
+                           {
+                                  max=result[0].id;
+                                 // console.log(max);
+                                  conn.query("insert into Reception (reception_name,reception_contact,reception_email,uid,aid,rec_Image)values(?,?,?,?,201,?)",[name,contact,email,max,img],(err,result)=>{
+                                         if(err)
+                                         {
+                                             reject(err);
+                                         }
+                                         else{
+                                             resolve("true");
+                                         }
+                                      });
+                           }
+                    });
+                           }
+                      });
+                     
+                      
+             })
+       }
+
+exports.showrec=()=>{
+
+       return new Promise((resolve,reject)=>{
+
+              conn.query("select *from reception",(err,result)=>{
+                     if(err)
+                     {
+                            reject(err);
+                     }
+                     else
+                     {
+                            resolve(result);
+                     }
+              });
+       });
+}
+
+exports.recepudate=(...user)=>{
+
+       return new Promise((resolve,reject)=>{
+
+              conn.query("update reception set reception_name=?,reception_email=?,reception_contact=? where rid=?",[user[0],user[1],user[2],user[3]],(err,result)=>{
+
+                     if(err)
+                     {
+                            console.log(err);
+                            reject("false");
+                     }
+                     else{
+                            resolve("true");
+                     }
+              })
+       })
+}
+
+exports.recepdelete=(id)=>{
+
+return new Promise((resolve,reject)=>{
+
+       conn.query("delete from user where uid=?",[id],(err,result)=>{
+
+              if(err)
+              {
+                     console.log(err);
+                     reject("false");
+              }
+              else{
+                     resolve("true");
+              }
+       });
+})
+};
+
+exports.searchrecep=(na)=>{
+
+       return new Promise((resolve,reject)=>{
+              conn.query("select *from reception where reception_name like '%"+na+"%'",(err,result)=>{
+
+                  if(err)
+                  {
+                     console.log(err);
+                     reject("false");
+                  }
+                  else{
+                     resolve(result);
+                  }
+              })
+       })
+       
 }
