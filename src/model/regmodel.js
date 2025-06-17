@@ -1,7 +1,3 @@
-
-
-
-
 let conn=require("../config/db.js");
 const user = require("../services/reguser_services.js");
 
@@ -54,6 +50,7 @@ exports.loginuser=(username,password,department)=>{
                             conn.query("insert into Doctor (doctor_name,doctor_email,doctor_specialization,doctor_contact,doctor_Experience,Doctor_Image,uid,aid)values(?,?,?,?,?,?,?,201)",[name,email,Specialization,contact,experience,img,max],(err,result)=>{
                                    if(err)
                                    {
+                                          console.log("Error Is "+err);
                                        reject(err);
                                    }
                                    else{

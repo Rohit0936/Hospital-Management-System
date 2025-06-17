@@ -1,10 +1,10 @@
 const e = require("express");
 let model = require("../model/regmodel.js");
- let Doctor = require("../services/reg_doc_services.js");
+let Doctor = require("../services/reg_doc_services.js");
+const { render } = require("../app.js");
 exports.home = (req, res) => {
      res.render("home.ejs");
  };
-let model=require("../model/regmodel.js")
 
 exports.admindashbord=(req,res)=>{
     res.render("admindashbord.ejs");
@@ -137,3 +137,41 @@ exports.show_doc=(req,res)=>{
         res.send("Something went wrong");
     })
  }
+
+
+ exports.reg_rec=(req,res)=>{
+    res.render("reg_rec.ejs");
+ }
+
+ exports.show_rec=(req,res)=>{
+    res.render("show_rec.ejs");
+ }
+
+ exports.rec_dashbord=(req,res)=>{
+    res.render("rec_dashbord.ejs");
+ }
+
+ exports.reg_nurse=(req,res)=>{
+    res.render("reg_nurse.ejs");
+ }
+
+ exports.show_nurse=(req,res)=>{
+    res.render("show_nurse.ejs");
+ }
+
+ exports.add_room=(req,res)=>{
+    res.render("add_room.ejs");
+ }
+
+ exports.show_room=(req,res)=>{
+    res.render("show_room.ejs");
+ }
+
+ exports.reg_patient=(req,res)=>{
+    res.render("reg_patient.ejs");
+ }
+
+ exports.show_patient=(req,res)=>{
+    res.render("show_patient");
+ }
+

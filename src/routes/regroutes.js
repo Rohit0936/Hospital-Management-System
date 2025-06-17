@@ -33,4 +33,13 @@ router.get("/updatedoctor",control.updateDocotr);
 router.post("/finalupdatedoc",upload.single("imag"),control.finalupdatedoc);
 router.get("/deletedoctor",control.deletedoc);
 router.get("/searchdoc",control.searchdoc);
+
+router.get("/rec_dashbord",control.rec_dashbord);
+router.get("/reg_nurse",control.reg_nurse);
+router.get("/show_nurse",control.show_nurse);
+
+router.get("/add_room",control.add_room);
+router.get("/show_room",control.show_room);
+router.get("/reg_patient",control.reg_patient);
+router.get("/show_patient",control.show_patient);
 module.exports=router; 
