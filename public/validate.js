@@ -71,7 +71,7 @@ let flag2=true;
 function emailvalid(str){
 
     let email=document.getElementById("email");
-    if(str.endsWith(".com"))
+    if(str.endsWith("gmail.com"))
     {
         email.innerHTML="";
         flag2=true;
@@ -117,6 +117,19 @@ function submitfrom()
 {
     console.log(flag1+" "+flag2+" "+flag3+" "+flag4);
     if(flag1 && flag2 && flag3 && flag4)
+    {
+       return true;
+    }
+    else{
+        alert("hello");
+        return false;
+    }
+}
+
+function submitfromnurse()
+{
+    console.log(flag1+" "+flag2+" "+flag3+" ");
+    if(flag1 && flag2 && flag3)
     {
        return true;
     }

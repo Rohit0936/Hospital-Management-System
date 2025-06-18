@@ -33,9 +33,28 @@ router.get("/updatedoctor",control.updateDocotr);
 router.post("/finalupdatedoc",upload.single("imag"),control.finalupdatedoc);
 router.get("/deletedoctor",control.deletedoc);
 router.get("/searchdoc",control.searchdoc);
+
 router.post("/regrecep",upload.single("imag"),control.regrecep);
 router.get("/recepupdate",control.recepudate);
 router.post("/recepfinalupdatedoc",control.recefinalpudate);
 router.get("/recepdelete",control.recepdelete);
 router.get("/searchrecep",control.searchrecep);
+
+ router.get("/reg_nurse",control.reg_nurse);
+ router.post("/regnurse",upload.single("imag"),control.insert_nurse)
+ router.get("/show_nurse",control.show_nurse);
+ router.get("/searchnurse",control.searchnurse);
+ router.get("/updatenurse",control.updatenurse);
+ router.post("/finalupdatenurse",control.finalnurseupdate);
+ router.get("/deletenurse",control.deleteNurse)
+ router.get("/add_room",control.add_room);
+ router.post("/addroom",control.addromm);
+ router.get("/show_room",control.show_room);
+ router.get("/searchroom",control.searchroom);
+ router.get("/updateroom",control.updateroom);
+ router.post("/finalupdateroom",control.finalupdateroom)
+ router.get("/deleteroom",control.deleteroom);
+// router.get("/reg_patient",control.reg_patient);
+// router.get("/show_patient",control.show_patient);
+
 module.exports=router; 

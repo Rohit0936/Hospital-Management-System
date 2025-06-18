@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Receptionist Panel - Healthcare</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="sidebar.css">
+</head>
+<body>
+<!-- Sidebar -->
+<div class="sidebar">
+  <div class="text-center mb-4">
+    <h4 class="text-white"><i class="fas fa-hospital"></i> Receptionist Panel</h4>
+  </div>
+  <ul class="nav flex-column">
+    <li class="nav-item">
+      <a class="nav-link active" href="/receptionistdashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+    </li>
+
+    <!-- Nurses Menu -->
+    <input type="checkbox" id="nurses-toggle">
+    <label class="nav-link" for="nurses-toggle"><i class="fas fa-user-nurse"></i> Nurses</label>
+    <div class="submenu">
+      <a href="/reg_nurse">➕ Add Nurse</a>
+      <a href="/show_nurse?s=n">📋 Show Nurses</a>
+    </div>
+
+    <!-- Rooms Menu -->
+    <input type="checkbox" id="rooms-toggle">
+    <label class="nav-link" for="rooms-toggle"><i class="fas fa-bed"></i> Rooms</label>
+    <div class="submenu">
+      <a href="/add_room">➕ Add Room</a>
+      <a href="/show_room?s=n">📋 Show Rooms</a>
+    </div>
+
+    <!-- Patients Menu -->
+    <input type="checkbox" id="patients-toggle">
+    <label class="nav-link" for="patients-toggle"><i class="fas fa-users"></i> Patients</label>
+    <div class="submenu">
+      <a href="/reg_patient">➕ Add Patient</a>
+      <a href="/show_patient">📋 Show Patients</a>
+    </div>
+
+    <li class="nav-item">
+      <a class="nav-link" href="/home"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </li>
+  </ul>
+</div>
+<!-- Main Content -->
+<div class="main-content">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+      <div class="ms-auto">
+        <span class="navbar-text text-white"><h3><i class="fas fa-user-nurse"></i> Receptionist</h3></span>
+      </div>
+    </div>
+  </nav>
+</div>
+
+</body>
+</html>

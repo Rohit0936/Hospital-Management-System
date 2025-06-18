@@ -1,20 +1,51 @@
-
-
-
-
 let conn=require("../config/db.js");
 const user = require("../services/reguser_services.js");
 
 exports.loginuser=(username,password,department)=>{
 
+       let id;
      
-       if(username==="Admin" && password==="Admin" && department==="admin")
-       {
-        return true;
-       }
-       else{
-        return false;
-       }
+       return new Promise((resolve,reject)=>{
+              if(username==="Admin" && password==="Admin" && department==="admin")
+               {
+                    resolve({name:"admin",passwo:"admin"});
+               }
+               else if(department!=="admin")
+              {
+                 conn.query("select uid,user_password from user where username=? && Role=?",[username,department],(err,result)=>{
+                     if(err)
+                     {
+                            console.log(err);
+                     }
+                     else{
+                            if(result.length==0)
+                            {
+                                 
+                                   reject(result);
+                            }
+                            else
+                            {
+                                   id=result[0].uid;
+                                   let pass=result[0].user_password;
+                                   conn.query("select reception_name,rec_Image from reception where uid=?",[id],(err,result)=>{
+                                          if(err)
+                                          {
+                                          reject(result);
+                                          }
+                                          else{
+                                                 resolve({name:result[0].reception_name,img:result[0].rec_Image,passwo:pass});
+                                          }
+                                        })
+                            }     
+                     }
+                    
+                 }) ;    
+              }
+              else{
+                      reject("false");
+              }      
+       });
+       
 }
 
  exports.reguser=(...user)=>
@@ -55,6 +86,7 @@ exports.loginuser=(username,password,department)=>{
                             conn.query("insert into Doctor (doctor_name,doctor_email,doctor_specialization,doctor_contact,doctor_Experience,Doctor_Image,uid,aid)values(?,?,?,?,?,?,?,201)",[name,email,Specialization,contact,experience,img,max],(err,result)=>{
                                    if(err)
                                    {
+                                          console.log("Error Is "+err);
                                        reject(err);
                                    }
                                    else{
@@ -115,11 +147,11 @@ exports.updatdoc=(id)=>{
     });
 }
 
-exports.finalupdatedoc=(name,email,specialization,contact,experience,image,uid)=>{
+exports.finalupdatedoc=(name,email,specialization,contact,experience,uid)=>{
 
       
     return new Promise((resolve,reject)=>{
-         conn.query("update doctor set doctor_name=?,doctor_email=?,doctor_specialization=?,doctor_contact=?,doctor_Experience=?,doctor_image=? where did=?",[name,email,specialization,contact,experience,image,uid],(err,result)=>{
+         conn.query("update doctor set doctor_name=?,doctor_email=?,doctor_specialization=?,doctor_contact=?,doctor_Experience=? where did=?",[name,email,specialization,contact,experience,uid],(err,result)=>{
               if(err)
               {
                      console.log(err);
@@ -308,6 +340,251 @@ exports.searchrecep=(na)=>{
                      resolve(result);
                   }
               })
+       })   
+}
+
+exports.regnurse=(data)=>
+{
+       return new Promise((resolve,reject)=>{
+
+              conn.query("insert into nurse (nurse_name,nurse_email,nurse_contact,nurse_shift,nurse_image) values(?,?,?,?,?)",[...data],(err,result)=>{
+                     if(err)
+                     {
+                            console.log(err);
+                            reject(err);
+                     }
+                     else{
+                            resolve(result);
+                     }
+              });
+       });
+}
+
+exports.show_nurse=(no)=>
+{
+   return new Promise((resolve,reject)=>{
+        if(no==="Day" || no==="Night")
+        {
+              conn.query("select *from nurse where nurse_shift=?",[no],(err,result)=>{
+
+                     if(err)
+                     {
+                            reject(err);
+                     }
+                     else{
+                            resolve(result);
+                     }
+              });
+        }
+        else{
+              conn.query("select *from nurse",(err,result)=>{
+                     if(err)
+                     {
+                            reject(err);
+                     }
+                     else{
+                            resolve(result);
+                     }
+              }) 
+       }
+   });
+}
+
+exports.searchnurse=(str)=>{
+
+       return new Promise((resolve,reject)=>{
+
+              conn.query("select *from nurse where nurse_name like '%"+str+"%' ",(err,result)=>{
+                 if(err)
+                 {
+                     reject(err);
+                 }
+                 else{
+                     resolve(result);
+                 }
+              })
+       });
+}
+
+exports.updatenurse=(id)=>{
+
+       return new Promise((resolve,reject)=>{
+              conn.query("select *from nurse where nid=?",[id],(err,result)=>{
+
+                     if(err)
+                     {
+                            reject(err);
+                     }
+                     else{
+                            resolve(result[0]);
+                     }
+              });
+       });
+}
+
+exports.finalnurseupdate=(...data)=>{
+
+       return new Promise((resolve,reject)=>{
+
+              conn.query("update nurse set nurse_name=?, nurse_email=?, nurse_contact=?, nurse_shift=? where nid=?",[...data],(err,result)=>{
+
+                     if(err)
+                     {
+                            reject(err);
+                     }
+                     else{
+                            resolve(result);
+                     }
+              });
+       });
+}
+
+exports.deleteNurse=(id)=>{
+
+       return new Promise((resolve,reject)=>{
+
+              conn.query("delete from nurse where nid=?",[id],(err,result)=>{
+                     if(err)
+                     {
+                            reject(err);
+                     }
+                     else{
+                            resolve(result);
+                     }
+              })
+       });
+}
+
+exports.addromm=(data)=>{
+
+       return new Promise((resolve,reject)=>{
+
+              conn.query("insert into room values('0','"+data[0]+"','1','"+data[1]+"','"+data[2]+"')",(err,result)=>{
+                     if(err)
+                     {
+                            console.log(err);
+                            reject(err);
+                     }
+                     else{
+                            resolve(result);
+                     }
+              })
        })
-       
+}
+
+exports.show_room=(s)=>{
+
+       return new Promise((resolve,reject)=>{
+
+          if(s==="ICU" || s==="AC" || s==="General")
+          {
+              conn.query("select *from room where room_type=?",[s],(err,result)=>{
+
+                     if(err)
+                     {
+                            reject(err);
+                     }
+                     else{
+                            resolve(result);
+                     }
+                  });
+          }
+          else if(s==="true" || s==="false")
+          {
+              conn.query("select *from room where room_status=?",[s],(err,result)=>{
+
+                     if(err)
+                     {
+                            reject(err);
+                     }
+                     else{
+                            resolve(result);
+                     }
+                  });
+          }
+          else
+          {
+              conn.query("select *from room",(err,result)=>{
+
+                     if(err)
+                     {
+                            reject(err);
+                     }
+                     else{
+                            resolve(result);
+                     }
+                  });
+          }
+       })
+}
+
+exports.searchroom=(str)=>{
+
+       return new Promise((resolve,reject)=>{
+
+              conn.query("select *from room where room_no like '%"+str+"%' OR room_type like '%"+str+"%'",(err,result)=>{
+
+                     if(err)
+                     {
+                            reject(err);
+                     }
+                     else{
+                            //console.log(result);
+                            resolve(result);
+                     }
+              })
+       });
+}
+
+exports.updateroom=(s)=>{
+
+       return new Promise((resolve,reject)=>{
+
+              conn.query("select *from room where room_id=?",[s],(err,result)=>{
+
+                     if(err)
+                     {
+                            reject(err);
+                     }
+                     else{
+                            resolve(result[0]);
+                     }
+              });
+       })
+}
+
+exports.finalupdateroom=(...data)=>{
+
+       return new Promise((resolve,reject)=>{
+
+              //console.log(data);
+              conn.query("update room set room_type=?, room_charges=?,room_no=? where room_id=?",[...data],(err,result)=>{
+
+                     if(err)
+                     {
+                            console.log(err);
+                            reject(err);
+                     }
+                     else{
+                            //console.log(result);
+                            resolve(result);
+                     }
+              })
+       })
+}
+
+exports.deleteroom=(id)=>{
+
+       return new Promise((resolve,reject)=>{
+
+              conn.query("delete from room where room_id=?",[id],(err,result)=>{
+                     if(err)
+                     {
+                            reject(err);
+                     }
+                     else{
+                            resolve(result);
+                     }
+              })
+       });
 }

@@ -1,7 +1,12 @@
 const e = require("express");
 let model = require("../model/regmodel.js");
+let nurse=require("../services/regnurse_service.js");
  let Doctor = require("../services/reg_doc_services.js");
  let reception=require("../services/reg_reception.js");
+ let login=require("../services/login_service.js");
+ let room=require("../services/room.js");
+
+
 exports.home = (req, res) => {
      res.render("home.ejs");
  };
@@ -14,19 +19,37 @@ exports.home=(req,res)=>{
     res.render("home.ejs");
 };
 
-
-
- exports.loginuser = (req, res) => {
+ exports.loginuser = async (req, res) => {
 
      let { username, password, department } = req.body;
-     let flag = model.loginuser(username, password, department);
+     const lo=new login();
+
+      
      //console.log(flag);
-     if (flag) {
-         res.render("admindashbord.ejs", { msg: "" });
+     try{
+       let result = await lo.loginuser(username, password, department);
+       // console.log(result);
+        if(typeof(result)!="undefined" &&  result.length!=0 && department=="admin")
+        {
+            res.render("admindashbord.ejs", { msg: "" });
+        }
+        else if(typeof(result)!="undefined" &&  result.length!=0 && department=="Reception")
+        {
+           // console.log(result);
+          
+            res.render("rec_dashbord.ejs",{msg:result});
+        }
+        else{
+            res.render("login.ejs", { msg: "Invalid Username and Password" });
+        }
+
      }
-     else {
-         res.render("login.ejs", { msg: "Invalid Username and Password" })
+     catch(err)
+     {
+        console.log(err);
+        res.render("login.ejs", { msg: "Invalid Username and Password" });
      }
+    
  }
 
  exports.login=(req,res)=>{
@@ -91,12 +114,8 @@ exports.regDoctor = async (req, res) => {
 
  exports.finalupdatedoc=(req,res)=>{
     let {name,email,specialization,contact,experience}=req.body;
-   // console.log(name);
-   let image=req.file.path;
-   image=image.substring(14,image.length);
-   image="./upload/"+image;
-
-    let flag=model.finalupdatedoc(name,email,specialization,contact,experience,image,uid);
+ 
+    let flag=model.finalupdatedoc(name,email,specialization,contact,experience,uid);
     flag.then((r)=>{
         if(r)
             {
@@ -230,3 +249,186 @@ exports.searchrecep=(req,res)=>{
     });
 }
  
+
+exports.reg_nurse=(req,res)=>{
+    
+  res.render("reg_nurse.ejs",{msg:""});
+}
+
+exports.insert_nurse= async (req,res)=>{
+
+    let {name,email,contact,nursedata}=req.body;
+    console.log(nursedata);
+    let image=req.file.path;
+    image=image.substring(14,image.length);
+    image="./upload/"+image;
+   
+    let n=new nurse();
+    //console.log(name+" "+email+" "+contact+" "+image);
+    try{
+        await n.regnurse(name,email,contact,nursedata,image);
+        res.render("reg_nurse.ejs",{msg:"Registration Successfully"})
+    }
+    catch(err)
+    {
+        console.log(err);
+        res.render("reg_nurse.ejs",{msg:"This email and contact already present"})
+    }
+}
+
+exports.show_nurse=(req,res)=>{
+
+    let no=req.query.s;
+        let flag=model.show_nurse(no);
+         flag.then((r)=>{
+              res.render("show_nurse.ejs",{result:r});
+         }).catch((err)=>{
+            console.log(err);
+         });
+};
+
+exports.searchnurse=(req,res)=>{
+
+    let str=req.query.str;
+    
+   let flag=model.searchnurse(str);
+   flag.then((r)=>{
+    // console.log(r);
+        res.json(r);
+   }).catch((err)=>{
+    res.send("<h1>Something went wrong</h1>");
+   })
+};
+
+let nid;
+exports.updatenurse=(req,res)=>{
+
+    let id=req.query.nid;
+    nid=id;
+    let result=model.updatenurse(id);
+    result.then((r)=>{
+      
+        res.render("nurse_update.ejs",{data:r,msg:""});
+    }).catch((err)=>{
+        res.send("<h1>Something went wrong</h1>")
+    });
+}
+
+exports.finalnurseupdate=(req,res)=>{
+
+   
+    let {name,email,contact,nurse_shift}=req.body;
+  //let name1=req.body.name;
+
+  //  console.log(nurse_shift);
+    
+       let flag= model.finalnurseupdate(name,email,contact,nurse_shift,nid);
+       flag.then((r)=>{
+        res.render("nurse_update",{data:"",msg:"update Successfully"})
+       }).catch((err)=>{
+        res.render("nurse_update",{data:"",msg:"update failed"})
+       })
+}
+
+exports.deleteNurse=(req,res)=>{
+
+    let id=req.query.nid;
+
+    let flag=model.deleteNurse(id)
+    flag.then((r)=>{
+        res.redirect("/show_nurse");
+    }).catch((err)=>{
+        res.send("<h1>Something went wrong</h1>")
+    })
+}
+
+exports.add_room=(req,res)=>{
+    res.render("add_room.ejs",{msg:""});
+}
+
+exports.addromm= async (req,res)=>{
+
+    let {room_type,room_charges,id}=req.body;
+
+    try{
+        let ro=new room();
+      await ro.addromm(room_type,room_charges,id);
+
+        res.render("add_room",{msg:"Room Add Successfully"})
+    }
+    catch(err)
+    {
+        res.render("add_room",{msg:"Room Id already present"})
+        //res.send("<h1>Something went wrong</h1>")
+    }
+}
+
+exports.show_room=(req,res)=>{
+
+    let s=req.query.s;
+
+       let flag=model.show_room(s);
+       flag.then((r)=>{
+         res.render("show_room.ejs",{data:r});
+       }).catch((err)=>{
+        console.log(err);
+        res.send("<h1>Something went wrong</h1>")
+       })
+             
+}
+
+exports.searchroom=(req,res)=>{
+
+    let str=req.query.str;
+   // console.log(str);
+    let flag=model.searchroom(str);
+    flag.then((r)=>{
+       //console.log(r);
+        res.json(r);
+    }).catch((err)=>{
+        res.send("<h1>Something went wrong</h1>")
+    })
+}
+
+
+exports.updateroom=(req,res)=>{
+    let rid=req.query.rid;
+    uid=rid;
+    let flag=model.updateroom(rid);
+    
+    flag.then((r)=>{
+        //console.log(r);
+        res.render("room_update.ejs",{data:r,msg:""});
+    }).catch((err)=>{
+        res.send("<h1>Something went wrong</h1>");
+    })
+    
+}
+
+exports.finalupdateroom=(req,res)=>{
+
+   
+    let {room_type,room_charges,id}=req.body;
+    try{
+        model.finalupdateroom(room_type,room_charges,id,uid);
+        
+        res.redirect("/show_room");
+    }
+    catch(err)
+    {
+        res.render("room_update.ejs",{data:"",msg:"Update Failed"});
+    }
+}
+
+exports.deleteroom=(req,res)=>{
+
+    let id=req.query.rid;
+    try{
+        model.deleteroom(id);
+          res.redirect("/show_room");
+    }
+    catch(err)
+    {
+        res.send("<h1>Something went wrong</h1>");
+    }
+}

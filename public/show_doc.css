@@ -24,4 +24,53 @@
 }
 
 
+.header-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .header-logo {
+      font-size: 2rem;
+      color: #e74c3c;
+      margin-right: 10px;
+    }
+
+    /* Patient card styles */
+    .patient-card {
+      border-radius: 12px;
+      transition: transform 0.2s ease;
+    }
+
+    .patient-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .patient-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: #e74c3c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+
+    .truncate-text {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+
+    
+
+
+
 

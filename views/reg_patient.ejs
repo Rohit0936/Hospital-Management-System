@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Patient - Admin Panel</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="/reg_doc.css" />
+  <link rel="stylesheet" href="/sidebar.css" />
+  <style>
+    .page-wrapper {
+      margin-left: 250px;
+      padding: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .page-wrapper {
+        margin-left: 0;
+      }
+    }
+
+   
+  </style>
+</head>
+<body>
+  <%- include("rec_dashbord.ejs") %>
+
+  <div class="page-wrapper">
+    <div class="container doctor-container">
+      <div class="form-container">
+        <h3 class="mb-3 fw-bold text-center">Add Patient</h3>
+        <form action="add_patient.php" method="POST">
+          <div class="mb-2">
+            <label for="patient_name">Patient Name</label>
+            <input type="text" id="patient_name" name="patient_name" placeholder="Enter patient name" required maxlength="100" class="form-control">
+          </div>
+          <div class="mb-2">
+            <label for="patient_age">Patient Age</label>
+            <input type="number" id="patient_age" name="patient_age" placeholder="Enter age" required min="0" max="150" class="form-control">
+          </div>
+          <div class="mb-2">
+            <label for="patient_gender">Gender</label>
+            <select id="patient_gender" name="patient_gender" required class="form-select">
+              <option value="">Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+          <div class="mb-2">
+            <label for="patient_contact">Contact Number</label>
+            <input type="text" id="patient_contact" name="patient_contact" placeholder="Enter 10-digit contact" required pattern="\d{10}" maxlength="10" class="form-control">
+          </div>
+          <div class="mb-2">
+            <label for="patient_issue">Medical Issue</label>
+            <textarea id="patient_issue" name="patient_issue" placeholder="Describe medical issue" required maxlength="255" class="form-control"></textarea>
+          </div>
+          <div class="mb-2">
+            <label for="admitted_date">Admitted Date</label>
+            <input type="date" id="admitted_date" name="admitted_date" required class="form-control">
+          </div>
+          <div class="mb-2">
+            <label for="discharge_date">Discharge Date</label>
+            <input type="date" id="discharge_date" name="discharge_date" required class="form-control">
+          </div>
+          <div class="mb-2">
+            <label for="room_id">Room ID</label>
+            <select id="room_id" name="room_id" class="form-select">
+              <option value="">Select Room (Optional)</option>
+              <!-- Populate dynamically server-side -->
+              <option value="101">Room 101 (ICU)</option>
+              <option value="102">Room 102 (AC)</option>
+              <option value="103">Room 103 (General)</option>
+            </select>
+          </div>
+          <div class="mb-2">
+            <label for="nid">Nurse ID</label>
+            <select id="nid" name="nid" class="form-select">
+              <option value="">Select Nurse (Optional)</option>
+              <!-- Populate dynamically server-side -->
+              <option value="1">Nurse 1</option>
+              <option value="2">Nurse 2</option>
+            </select>
+          </div>
+          <div class="mb-2">
+            <label for="Did">Doctor ID</label>
+            <select id="Did" name="Did" class="form-select">
+              <option value="">Select Doctor (Optional)</option>
+              <!-- Populate dynamically server-side -->
+              <option value="1">Doctor 1</option>
+              <option value="2">Doctor 2</option>
+            </select>
+          </div>
+          <div class="mb-2">
+            <label for="Status">Status</label>
+            <select id="Status" name="Status" class="form-select">
+              <option value="">Select Status (Optional)</option>
+              <option value="Admit">Admit</option>
+              <option value="Discharge">Discharge</option>
+            </select>
+          </div>
+          <div class="text-center">
+            <button type="submit">Add Patient</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
