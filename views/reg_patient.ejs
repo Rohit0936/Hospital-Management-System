@@ -7,104 +7,135 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
   <link rel="stylesheet" href="/reg_doc.css" />
-  <link rel="stylesheet" href="/sidebar.css" />
+  <link rel="stylesheet" href="sidebar.css" />
+  <script src="addimag.js" type="text/javascript"></script>
+  <script src="/validate.js" type="text/javascript"></script>
   <style>
-    .page-wrapper {
-      margin-left: 250px;
-      padding: 20px;
+    
+    .form-container {
+      border: 2px solid #333;
+      border-radius: 10px;
+      padding: 30px;
+      background-color: #f9f9f9;
+      max-width: 11100px;
+      margin: auto;
     }
-
-    @media (max-width: 768px) {
-      .page-wrapper {
-        margin-left: 0;
-      }
+    .image-container {
+      margin-top: 30px;
+      text-align: center;
     }
+    .image-upload {
+      margin-top: 15px;
+    }
+    .image-upload-label {
+      cursor: pointer;
+      color: #007bff;
+    }
+    .f {
+         
+  border-radius: 10px;           
+  padding: 30px;                 
+  background-color: #fff;       
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
 
-   
   </style>
 </head>
 <body>
-  <%- include("rec_dashbord.ejs") %>
+  <%- include("dashboard.ejs") %>
 
-  <div class="page-wrapper">
-    <div class="container doctor-container">
-      <div class="form-container">
-        <h3 class="mb-3 fw-bold text-center">Add Patient</h3>
-        <form action="add_patient.php" method="POST">
-          <div class="mb-2">
-            <label for="patient_name">Patient Name</label>
-            <input type="text" id="patient_name" name="patient_name" placeholder="Enter patient name" required maxlength="100" class="form-control">
+  <form action="/add_patient"  method="POST" onsubmit="return submitfromnurse()">
+    <div class="page-wrapper">
+      <div class="container ">
+        <div class="f">
+          <h3 class="text-center fw-bold mb-4">Add Patient</h3>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label  class="form-label">Patient Name: </label>&nbsp;&nbsp;<label class="info" id="name"></label>
+              <input type="text" class="form-control" id="setname" name="patientname" placeholder="Enter name" onkeyup="namevalid(this.value)" required>
+            </div>
+            <div class="col-md-6">
+              <label  class="form-label">Patient Age</label>
+              <input type="number" class="form-control" id="patient_age" name="patientage" placeholder="Enter Age" onkeyup="setname1()" required>
+            </div>
           </div>
-          <div class="mb-2">
-            <label for="patient_age">Patient Age</label>
-            <input type="number" id="patient_age" name="patient_age" placeholder="Enter age" required min="0" max="150" class="form-control">
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="gender" class="form-label">Gender</label>
+              <select class="form-select" id="gender" name="gender" onkeyup="setname1()" required>
+                <option value="" selected disabled>Select gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="contact_number" class="form-label">Contact Number:</label>&nbsp;&nbsp;<label class="info" id="con"></label>
+              <input type="tel" class="form-control" id="contact_number" name="contact_number" placeholder="Enter 10-digit contact"  onclick="setname1()" onkeyup="cont(this.value)" required>
+            </div>
           </div>
-          <div class="mb-2">
-            <label for="patient_gender">Gender</label>
-            <select id="patient_gender" name="patient_gender" required class="form-select">
-              <option value="">Select Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
+
+          <div class="mb-3">
+            <label for="medical_issue" class="form-label">Medical Issue</label>
+            <textarea class="form-control" id="medical_issue" name="medical_issue"  required></textarea>
           </div>
-          <div class="mb-2">
-            <label for="patient_contact">Contact Number</label>
-            <input type="text" id="patient_contact" name="patient_contact" placeholder="Enter 10-digit contact" required pattern="\d{10}" maxlength="10" class="form-control">
+
+          
+
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label for="room_id" class="form-label">Room:</label>
+              <select class="form-select" id="room_id" name="room" required>
+                <option value="" selected disabled>Select room</option>
+                <%
+                  room.forEach((item,index)=>{
+                %>
+                <option value="<%=item.room_id%>"><%=item.room_no%>&nbsp;&nbsp;<%=item.room_type%></option>
+                <%
+                  })
+                %>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label for="nurse_id" class="form-label">Nurse ID</label>
+              <select class="form-select" id="nurse_id" name="nurse" required>
+                <option value="" selected disabled>Select nurse</option>
+                <%
+                  nurse.forEach((item,index)=>{
+                %>
+                <option value="<%=item.nid%>"><%=item.nurse_name%></option>
+                <%
+                  });
+                %>
+                
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label for="doctor_id" class="form-label">Doctor</label>
+              <select class="form-select" id="doctor_id" name="doctor" required>
+                <option value="" selected disabled>Select doctor</option>
+                <%
+                  doctor.forEach((item,index)=>{
+                %>
+                <option value="<%=item.Did%>"><%=item.doctor_name%></option>
+                <%
+                  })
+                %>
+                
+              </select>
+            </div>
           </div>
-          <div class="mb-2">
-            <label for="patient_issue">Medical Issue</label>
-            <textarea id="patient_issue" name="patient_issue" placeholder="Describe medical issue" required maxlength="255" class="form-control"></textarea>
+
+
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary btn-lg">Add Patient</button>
           </div>
-          <div class="mb-2">
-            <label for="admitted_date">Admitted Date</label>
-            <input type="date" id="admitted_date" name="admitted_date" required class="form-control">
-          </div>
-          <div class="mb-2">
-            <label for="discharge_date">Discharge Date</label>
-            <input type="date" id="discharge_date" name="discharge_date" required class="form-control">
-          </div>
-          <div class="mb-2">
-            <label for="room_id">Room ID</label>
-            <select id="room_id" name="room_id" class="form-select">
-              <option value="">Select Room (Optional)</option>
-              <!-- Populate dynamically server-side -->
-              <option value="101">Room 101 (ICU)</option>
-              <option value="102">Room 102 (AC)</option>
-              <option value="103">Room 103 (General)</option>
-            </select>
-          </div>
-          <div class="mb-2">
-            <label for="nid">Nurse ID</label>
-            <select id="nid" name="nid" class="form-select">
-              <option value="">Select Nurse (Optional)</option>
-              <!-- Populate dynamically server-side -->
-              <option value="1">Nurse 1</option>
-              <option value="2">Nurse 2</option>
-            </select>
-          </div>
-          <div class="mb-2">
-            <label for="Did">Doctor ID</label>
-            <select id="Did" name="Did" class="form-select">
-              <option value="">Select Doctor (Optional)</option>
-              <!-- Populate dynamically server-side -->
-              <option value="1">Doctor 1</option>
-              <option value="2">Doctor 2</option>
-            </select>
-          </div>
-          <div class="mb-2">
-            <label for="Status">Status</label>
-            <select id="Status" name="Status" class="form-select">
-              <option value="">Select Status (Optional)</option>
-              <option value="Admit">Admit</option>
-              <option value="Discharge">Discharge</option>
-            </select>
-          </div>
-          <div class="text-center">
-            <button type="submit">Add Patient</button>
-          </div>
-        </form>
+          <label for="" style="color: red; margin-left: 360px; margin-top: 20px;"><%=msg%></label>
+        </div>
       </div>
     </div>
-  </div>
+  </form>
 </body>
 </html>

@@ -8,13 +8,15 @@ class login{
         let flag;
         try{
             let flag= await model.loginuser(username,password,role)
+           // console.log(flag);
             if(flag.name==="admin")
             {
                 return flag
             }
-            else{
-
-                let result=bcrypt.compareSync(password,flag.passwo)
+            else if(flag.ro==="Reception")
+            {
+              //  console.log(flag.role);
+                let result=bcrypt.compareSync(password,flag.passwo);
                 //console.log(result);
                 if(result)
                 {
@@ -22,6 +24,18 @@ class login{
                 }
                 else{
                    
+                    return flag=[];
+                }
+            }
+            else
+            {
+                let result=bcrypt.compareSync(password,flag.passwo)
+
+                if(result)
+                {
+                    return  flag
+                }
+                else{
                     return flag=[];
                 }
             }

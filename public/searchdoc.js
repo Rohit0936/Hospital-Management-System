@@ -74,18 +74,7 @@ let doc=(str)=>{
                        div2.appendChild(p);
         
                       
-                        if(item.Status==1)
-                        {
-                            const h6=document.createElement("h6");
-                            h6.innerHTML="<label >Status: </label><label  style='color: green;'>Avaiable</label>"
-                            div2.appendChild(h6);
-                        }
-                        else
-                        {
-                            h6=document.createElement("h6");
-                            h6.innerHTML="<label >Status: </label><label  style='color: red;'>Not Avaiable</label>"
-                            div2.appendChild(h6);
-                        }
+        
                        
                        // div2.appendChild(div3);
                         // this div store footer (delete and update)

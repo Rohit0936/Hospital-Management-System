@@ -1,66 +1,236 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Receptionist Panel - Healthcare</title>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <link rel="stylesheet" href="sidebar.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reception Dashboard</title>
+
+  <!-- Bootstrap & FontAwesome -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="/sidebar.css" />
+  <link rel="stylesheet" href="/show_doc.css" />
+  <script type="text/javascript" src="searchdoc.js"></script>
+
+  <style>
+    body {
+      background: linear-gradient(120deg, #a1c4fd, #c2e9fb);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .page-wrapper {
+      margin-left: 250px;
+      padding: 30px;
+      transition: margin-left 0.3s ease;
+    }
+
+    @media (max-width: 768px) {
+      .page-wrapper {
+        margin-left: 0;
+      }
+    }
+
+    .doctor-card-new {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 0 10px rgba(0, 0, 0, 0.05);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .doctor-card-new:hover {
+      transform: translateY(-12px) scale(1.03);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15), 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .doctor-card-new::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.2), transparent);
+      transform: rotate(45deg);
+      z-index: 0;
+      transition: transform 0.6s ease;
+    }
+
+    .doctor-card-new:hover::before {
+      transform: rotate(60deg);
+    }
+
+    .doctor-card-new .card-content {
+      position: relative;
+      z-index: 1;
+      padding: 30px;
+    }
+
+    .header-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      position: relative;
+    }
+
+    .header-logo {
+      font-size: 2.5rem;
+      color: #00cec9;
+      transition: color 0.3s ease;
+    }
+
+    .header-logo:hover {
+      color: #00a8a8;
+    }
+
+    .text-dark {
+      color: #2d3436 !important;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .text-muted {
+      color: #dfe6e9 !important;
+      font-size: 1.15rem;
+      line-height: 1.6;
+      font-weight: 400;
+    } 
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin-top: 40px;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 25px;
+      text-align: center;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px) scale(1.05);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .feature-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, rgba(0, 206, 201, 0.1), rgba(52, 152, 219, 0.1));
+      z-index: 0;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .feature-card:hover::after {
+      opacity: 1;
+    }
+
+    .feature-card i {
+      font-size: 3rem;
+      color: #00cec9;
+      margin-bottom: 15px;
+      transition: transform 0.3s ease;
+    }
+
+    .feature-card:hover i {
+      transform: scale(1.2);
+    }
+
+    .feature-card h4 {
+      color: #2d3436;
+      font-weight: 600;
+      margin-bottom: 12px;
+      font-size: 1.3rem;
+    }
+
+    .feature-card p {
+      color: #dfe6e9;
+    }
+
+    /* Color-coded icons */
+    .feature-card:nth-child(1) i { color: #55efc4; }
+    .feature-card:nth-child(2) i { color: #fdcb6e; }
+    .feature-card:nth-child(3) i { color: #ff7675; }
+    .feature-card:nth-child(4) i { color: #a29bfe; }
+
+    /* Welcome bar animation */
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    .gradient-divider {
+      height: 5px;
+      width: 100px;
+      background: linear-gradient(90deg, #00cec9, #0984e3, #6c5ce7);
+      background-size: 200% 100%;
+      border-radius: 3px;
+      animation: gradientShift 4s ease-in-out infinite;
+    }
+  </style>
 </head>
 <body>
-<!-- Sidebar -->
-<div class="sidebar">
-  <div class="text-center mb-4">
-    <h4 class="text-white"><i class="fas fa-hospital"></i> Receptionist Panel</h4>
-  </div>
-  <ul class="nav flex-column">
-    <li class="nav-item">
-      <a class="nav-link active" href="/receptionistdashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-    </li>
 
-    <!-- Nurses Menu -->
-    <input type="checkbox" id="nurses-toggle">
-    <label class="nav-link" for="nurses-toggle"><i class="fas fa-user-nurse"></i> Nurses</label>
-    <div class="submenu">
-      <a href="/reg_nurse">➕ Add Nurse</a>
-      <a href="/show_nurse?s=n">📋 Show Nurses</a>
-    </div>
+  <!-- Include reusable sidebar -->
+  <%- include("dashboard.ejs") %>
 
-    <!-- Rooms Menu -->
-    <input type="checkbox" id="rooms-toggle">
-    <label class="nav-link" for="rooms-toggle"><i class="fas fa-bed"></i> Rooms</label>
-    <div class="submenu">
-      <a href="/add_room">➕ Add Room</a>
-      <a href="/show_room?s=n">📋 Show Rooms</a>
-    </div>
+  <div class="page-wrapper">
+    <div class="container py-5">
+      <!-- Welcome Message Card -->
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+          <div class="card doctor-card-new shadow p-4 text-center">
+            <div class="card-content">
+              <div class="header-container mb-4">
+                <i class="fas fa-user-nurse header-logo"></i>
+                <h2 class="text-dark mb-0">Welcome Receptionist</h2>
+              </div>
+              <!-- Animated Gradient Divider -->
+              <div class="gradient-divider mx-auto mb-4"></div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-    <!-- Patients Menu -->
-    <input type="checkbox" id="patients-toggle">
-    <label class="nav-link" for="patients-toggle"><i class="fas fa-users"></i> Patients</label>
-    <div class="submenu">
-      <a href="/reg_patient">➕ Add Patient</a>
-      <a href="/show_patient">📋 Show Patients</a>
-    </div>
+      <!-- Feature Cards -->
+      <div class="card-grid mt-5">
+        <div class="feature-card">
+          <i class="fas fa-user-plus"></i>
+          <h4>Patient Admissions</h4>
+          <p>Streamline patient registration and admissions with ease.</p>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-bed"></i>
+          <h4>Room Management</h4>
+          <p>Efficiently assign and manage hospital rooms.</p>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-user-md"></i>
+          <h4>Nurse Coordination</h4>
+          <p>Coordinate with nurses for seamless patient care.</p>
+        </div>
 
-    <li class="nav-item">
-      <a class="nav-link" href="/home"><i class="fas fa-sign-out-alt"></i> Logout</a>
-    </li>
-  </ul>
-</div>
-<!-- Main Content -->
-<div class="main-content">
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light">
-    <div class="container-fluid">
-      <div class="ms-auto">
-        <span class="navbar-text text-white"><h3><i class="fas fa-user-nurse"></i> Receptionist</h3></span>
       </div>
     </div>
-  </nav>
-</div>
+  </div>
 
 </body>
 </html>

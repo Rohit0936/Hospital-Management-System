@@ -20,7 +20,7 @@
         
         <!--  Doctor Form -->
         <div class="form-container">
-          <h3 class="mb-3 fw-bold text-center">Add Doctor</h3>
+          <h3 class="mb-3 fw-bold text-center">Add Receptionist</h3>
           
           <div class="mb-2"><label>Name:</label>&nbsp;&nbsp;<label class="info" id="name"></label>
             <input type="text" name="name" id="setname" value="" placeholder="Enter Receptionist name" onkeyup="namevalid(this.value)" required>
@@ -40,7 +40,7 @@
             <input type="password" id="conpass" placeholder="Confirm password" onclick="compare(this.value)" onkeyup="compare(this.value)" required>
           </div>
             <div class="text-center">
-              <button type="submit" name="b">Add Doctor</button>
+              <button type="submit" name="b">Add Receptionist</button>
             </div>
             <label for="" style="color: red; margin-left: 80px; margin-top: 20px;"><%=msg%></label>
         </div>
@@ -56,7 +56,7 @@
             <i class="fas fa-cloud-upload-alt"></i>
             <p>Upload Profile Image</p>
             <label for="doctor-image" class="image-upload-label">Choose File</label>
-            <input type="file" id="doctor-image" name="imag" accept="image/*" onchange="addimg(event)" required>
+            <input type="file" id="doctor-image" style="border: none;" name="imag" accept="image/*" onchange="addimg(event)" required>
           </div>
         </div>
       </div>

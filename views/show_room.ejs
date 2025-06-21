@@ -45,7 +45,7 @@
   </style>
 </head>
 <body>
-  <%- include('rec_dashbord.ejs') %>
+  <%- include("dashboard.ejs") %>
 
   <div class="page-wrapper">
     <div class="container py-4">
@@ -68,7 +68,7 @@
       <br>
       <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4" id="maindiv">
         <%
-          if(data.length==0)
+          if(item.length==0)
           {
         %>
           <h1 style="width:100%; text-align: center;">Room Not Avaiable 😑</h1>
@@ -76,7 +76,7 @@
           }
           else
           {
-              data.forEach((item,index)=>{
+              item.forEach((item,index)=>{
          %>
          <div class="col" id="div1">
           <div class="card h-100 shadow room-card text-center" id="div2">

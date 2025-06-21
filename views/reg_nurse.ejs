@@ -12,7 +12,8 @@
   <script type="text/javascript" src="/validate.js"></script>
 </head>
 <body>
-    <%-include("rec_dashbord.ejs")%>
+  <%- include("dashboard.ejs") %>
+  <br>
     <form action="/regnurse" method="post" enctype="multipart/form-data" onsubmit=" return submitfromnurse()">
       <div class="page-wrapper">
         <div class="container doctor-container">

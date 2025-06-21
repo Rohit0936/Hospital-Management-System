@@ -69,7 +69,7 @@ function setname1()
 
 let flag2=true;
 function emailvalid(str){
-
+    setname1();
     let email=document.getElementById("email");
     if(str.endsWith("gmail.com"))
     {
@@ -128,7 +128,7 @@ function submitfrom()
 
 function submitfromnurse()
 {
-    console.log(flag1+" "+flag2+" "+flag3+" ");
+    console.log(flag1+" "+flag2+" "+flag3);
     if(flag1 && flag2 && flag3)
     {
        return true;

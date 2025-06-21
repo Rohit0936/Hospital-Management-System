@@ -33,9 +33,9 @@ Reception:-
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 Patient:-
 
-create table patient(pid int primary key auto_increment,patient_name varchar(100) not null,patient_age int not null,patient_gender enum('male','female') not null,
+create table patientdetail(pid int primary key auto_increment,patient_name varchar(100) not null,patient_age int not null,patient_gender enum('male','female') not null,
 patient_contact varchar(10) unique not null,patient_issue varchar(255) not null,admitted_date date not null,discharge_date date not null,
-room_id int,foreign key(room_id) references room(room_id),nid int,foreign key(nid) references nurse(nid),Did int,foreign key(Did) references Doctor(Did),Status enum('Admit','Discharge'));
+room_id int,foreign key(room_id) references room(room_id) on delete set null,nid int,foreign key(nid) references nurse(nid) on delete set null,Did int,foreign key(Did) references Doctor(Did) on delete set null,Status enum('Admit','Discharge'))
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 medical:-
@@ -46,5 +46,21 @@ medicine_name varchar(100) unique not null,medicine_price decimal(10,2));
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 Bill:-
 
-CREATE TABLE Bill(bid int primary key auto_increment,pid int,foreign key(pid) references patient(pid),room_charges DECIMAL(10,2),treatment_charges decimal(10,2),
-nurse_charges decimal(10,2),medicine_charges decimal(10,2),total_amount decimal(10,2),billing_date date);
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+create trigger for delete patient that time automatic change room_status.
+
+mysql> create trigger deletepatient after delete on patientdetail
+     for each row
+     begin
+     update room set room_status="true" where room_id=old.room_id;
+     end//
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+create trigger updatepatient after update on patientdetail
+     for each row
+     begin
+     if(old.room_id!=new.room_id) then
+     update room set room_status="true" where room_id=old.room_id;
+     update room set room_status="false" where room_id=new.room_id;
+     end if;
+     end //

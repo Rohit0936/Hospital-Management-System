@@ -18,17 +18,18 @@ let storage=multer.diskStorage({
 let upload=multer({storage:storage});
 
 router.get("/",control.home);
-router.get("/home",control.home);
+//router.get("/home",control.home);
 
 router.get("/admindashbord",control.admindashbord);
+router.get("/logout",control.logout);
 router.get("/login",control.login);
 router.get("/reg_doc",control.reg_doc);
-router.get("/show_doc",control.show_doc);
+router.get("/showdoctor",control.showDoctor);
 router.get("/reg_rec",control.reg_rec);
 router.get("/show_rec",control.show_rec);
 router.post("/loginuser",control.loginuser);
 router.post("/regdoctor",upload.single("imag"),control.regDoctor);
-router.get("/showdoctor",control.showDoctor);
+//router.get("/showdoctor",control.showDoctor);
 router.get("/updatedoctor",control.updateDocotr);
 router.post("/finalupdatedoc",upload.single("imag"),control.finalupdatedoc);
 router.get("/deletedoctor",control.deletedoc);
@@ -54,7 +55,16 @@ router.get("/searchrecep",control.searchrecep);
  router.get("/updateroom",control.updateroom);
  router.post("/finalupdateroom",control.finalupdateroom)
  router.get("/deleteroom",control.deleteroom);
-// router.get("/reg_patient",control.reg_patient);
-// router.get("/show_patient",control.show_patient);
-
+ router.get("/reg_patient",control.reg_patient);
+ router.post("/add_patient",control.addpatient);
+ router.get("/show_patient",control.show_patient);
+ router.get("/edit_patient",control.updatepatient);
+ router.post("/updatepatient",control.finalupdatepatient);
+ router.get("/delete_patient",control.deletepatient);
+ router.get("/showdocpatient",control.showdocpatient);
+ router.get("/showmedicinefrom",control.showmedicine);
+ router.get("/prescription",control.prescription);
+ router.post("/addmedicine",control.addmedicine);
+ router.get("/updatepatientstatus",control.updatepatientstatus);
+ router.get("/bill",control.bill);
 module.exports=router; 

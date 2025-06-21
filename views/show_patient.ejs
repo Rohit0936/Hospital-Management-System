@@ -6,93 +6,362 @@
   <title>Show Patients</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-  <link rel="stylesheet" href="/sidebar.css" />
-  <link rel="stylesheet" href="/show_doc.css" />
   <style>
-    .page-wrapper {
-      margin-left: 250px;
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
+      min-height: 100vh;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
       padding: 20px;
     }
 
-    @media (max-width: 768px) {
-      .page-wrapper {
-        margin-left: 0;
-      }
+    .header-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
     }
 
-    
-    
+    .header-logo {
+      font-size: 26px;
+      color: #1d1b1b;
+    }
 
-      </style>
+    .header-container h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1d1b1b;
+      text-transform: uppercase;
+      margin: 0;
+    }
+
+    .table-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      gap: 10px;
+    }
+
+    .back-btn {
+      padding: 6px;
+      font-size: 14px;
+      background-color: #6c757d;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background-color: #5a6268;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      max-width: 200px;
+      width: 100%;
+    }
+
+    .search-bar input {
+      padding: 6px 8px;
+      border: 1px solid #ced4da;
+      border-radius: 5px 0 0 5px;
+      font-size: 12px;
+      width: 100%;
+    }
+
+    .search-bar button {
+      padding: 6px 8px;
+      border: 1px solid #ced4da;
+      border-left: none;
+      border-radius: 0 5px 5px 0;
+      background-color: #1d1b1b;
+      color: #fff;
+      font-size: 12px;
+      transition: background-color 0.3s ease;
+    }
+
+    .search-bar button:hover {
+      background-color: #34495e;
+    }
+
+    .table-container {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 13px;
+    }
+
+    .table th, .table td {
+      vertical-align: middle;
+      padding: 10px;
+      text-align: center;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    .table th {
+      background-color: #1d1b1b;
+      color: #fff;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    .table tbody tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+
+    .table tbody tr:hover {
+      background-color: #e3f2fd;
+      transition: background-color 0.2s ease;
+    }
+
+    .table .status-admit {
+      color: #28a745;
+      font-weight: 500;
+    }
+
+    .table .status-discharge {
+      color: #6c757d;
+      font-weight: 500;
+    }
+
+    .table .btn-sm {
+      padding: 5px 10px;
+      font-size: 12px;
+      border-radius: 5px;
+    }
+
+    .table .btn-outline-primary {
+      border-color: #007bff;
+      color: #007bff;
+    }
+
+    .table .btn-outline-primary:hover {
+      background-color: #007bff;
+      color: #fff;
+    }
+
+    .table .btn-outline-danger {
+      border-color: #dc3545;
+      color: #dc3545;
+    }
+
+    .table .btn-outline-danger:hover {
+      background-color: #dc3545;
+      color: #fff;
+    }
+
+    .pagination-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .pagination {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+
+    .pagination a, .pagination span {
+      padding: 8px 12px;
+      font-size: 13px;
+      border-radius: 5px;
+      text-decoration: none;
+      color: #1d1b1b;
+      background-color: #f8f9fa;
+      border: 1px solid #dee2e6;
+      transition: all 0.2s ease;
+    }
+
+    .pagination a:hover {
+      background-color: #e3f2fd;
+      border-color: #007bff;
+      color: #007bff;
+    }
+
+    .pagination .active {
+      background-color: #1d1b1b;
+      color: #fff;
+      border-color: #1d1b1b;
+      pointer-events: none;
+    }
+
+    .pagination .disabled {
+      color: #6c757d;
+      background-color: #f8f9fa;
+      border-color: #dee2e6;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+      }
+
+      .header-container h1 {
+        font-size: 1.5rem;
+      }
+
+      .header-logo {
+        font-size: 22px;
+      }
+
+      .table th, .table td {
+        padding: 6px;
+        font-size: 11px;
+      }
+
+      .table .btn-sm {
+        padding: 4px 8px;
+        font-size: 10px;
+      }
+
+      .table-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .search-bar {
+        max-width: 100%;
+      }
+
+      .back-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+      }
+
+      .pagination a, .pagination span {
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <%- include('rec_dashbord.ejs') %>
+  <div class="container">
+    <!-- Header with Logo -->
+    <div class="header-container">
+      
+      <i class="fas fa-user-injured header-logo"></i>
+      <h1>Patients</h1>
+    </div>
 
-  <div class="page-wrapper">
-    <div class="container py-4">
-      <!-- Header with Logo -->
-      <div class="header-container">
-        <i class="fas fa-user-injured header-logo"></i>
-        <h1 class="fw-bold text-uppercase mb-0">Patients</h1>
-      </div>
-
-      <!-- Patient Cards -->
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4" id="patientGrid">
-        <!-- Sample Patient 1 -->
-        <div class="col">
-          <div class="card h-100 shadow patient-card text-center">
-            <div class="card-body d-flex flex-column align-items-center p-4">
-              <div class="patient-icon mb-3">
-                <i class="fas fa-user-injured"></i>
-              </div>
-              <h5 class="fw-bold text-dark mb-1">John Doe (ID: 1)</h5>
-              <p class="text-muted mb-2"><i class="fas fa-user me-1 text-primary"></i> Age: 45, Male</p>
-              <p class="mb-2"><i class="fas fa-phone me-1 text-success"></i> 9876543210</p>
-              <p class="text-muted mb-2 truncate-text"><i class="fas fa-stethoscope me-1 text-danger"></i> Heart condition requiring monitoring</p>
-              <p class="text-muted mb-2"><i class="fas fa-calendar me-1 text-info"></i> Admitted: 2025-06-01</p>
-              <p class="text-muted mb-2"><i class="fas fa-calendar-check me-1 text-info"></i> Discharge: 2025-06-10</p>
-              <p class="text-muted mb-2"><i class="fas fa-bed me-1 text-warning"></i> Room: 101 (ICU)</p>
-              <p class="text-muted mb-2"><i class="fas fa-user-nurse me-1 text-secondary"></i> Nurse: ID 1</p>
-              <p class="text-muted mb-2"><i class="fas fa-user-md me-1 text-secondary"></i> Doctor: ID 1</p>
-              <p class="mb-3"><i class="fas fa-check-circle me-1 text-success"></i> Status: Admit</p>
-            </div>
-            <div class="card-footer bg-white d-flex justify-content-center gap-2">
-              <a href="edit_patient.php?id=1" class="btn btn-outline-primary btn-sm px-3"><i class="fas fa-pen me-1"></i>Edit</a>
-              <a href="delete_patient.php?id=1" class="btn btn-outline-danger btn-sm px-3"><i class="fas fa-trash me-1"></i>Delete</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Sample Patient 2 -->
-        <div class="col">
-          <div class="card h-100 shadow patient-card text-center">
-            <div class="card-body d-flex flex-column align-items-center p-4">
-              <div class="patient-icon mb-3">
-                <i class="fas fa-user-injured"></i>
-              </div>
-              <h5 class="fw-bold text-dark mb-1">Jane Smith (ID: 2)</h5>
-              <p class="text-muted mb-2"><i class="fas fa-user me-1 text-primary"></i> Age: 30, Female</p>
-              <p class="mb-2"><i class="fas fa-phone me-1 text-success"></i> 8765432109</p>
-              <p class="text-muted mb-2 truncate-text"><i class="fas fa-stethoscope me-1 text-danger"></i> Fractured leg from accident</p>
-              <p class="text-muted mb-2"><i class="fas fa-calendar me-1 text-info"></i> Admitted: 2025-06-05</p>
-              <p class="text-muted mb-2"><i class="fas fa-calendar-check me-1 text-info"></i> Discharge: 2025-06-15</p>
-              <p class="text-muted mb-2"><i class="fas fa-bed me-1 text-warning"></i> Room: 102 (AC)</p>
-              <p class="text-muted mb-2"><i class="fas fa-user-nurse me-1 text-secondary"></i> Nurse: ID 2</p>
-              <p class="text-muted mb-2"><i class="fas fa-user-md me-1 text-secondary"></i> Doctor: ID 2</p>
-              <p class="mb-3"><i class="fas fa-check-circle me-1 text-success"></i> Status: Discharge</p>
-            </div>
-            <div class="card-footer bg-white d-flex justify-content-center gap-2">
-              <a href="edit_patient.php?id=2" class="btn btn-outline-primary btn-sm px-3"><i class="fas fa-pen me-1"></i>Edit</a>
-              <a href="delete_patient.php?id=2" class="btn btn-outline-danger btn-sm px-3"><i class="fas fa-trash me-1"></i>Delete</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Add more patients dynamically -->
+    <!-- Table Actions -->
+    <div class="table-actions">
+      <a href="/" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+      <div class="search-bar">
+        <input type="text" placeholder="Search patients..." />
+        <button><i class="fas fa-search"></i></button>
       </div>
     </div>
-  </div>
 
-</div> <!-- Closes .main-content from rec_dashbord -->
+    <!-- Patient Table -->
+    <div class="table-container">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Age/Gender</th>
+              <th>Phone</th>
+              <th>Admitted</th>
+              <th>Discharge</th>
+              <th>Room</th>
+              <th>Nurse</th>
+              <th>Doctor</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%
+              if(item.length==0)
+              {
+            %>
+            <td colspan="10"><h1>Patient Not Avaiable 😑</h1></td>
+            <%
+              }
+              else
+              {
+                  item.forEach((item,index)=>{
+            %>
+               <tr>
+                <td><%=item.pname%></td>
+                <td><%=item.age%>,<%=item.gender%></td>
+                <td><%=item.Contact%></td>
+                <td><%=item.admit.getDate()%>-<%=(parseInt(item.admit.getMonth())+1)%>-<%=item.admit.getFullYear()%></td>
+                <%
+                if(item.discharge==="no")
+                {
+                %>
+                <td>no</td>
+                <%
+                }
+                else
+                {
+                %>
+                <td><%=item.discharge%></td>
+                <%
+                }
+                %>
+                <td><%=item.room_no%>,<%=item.roomtype%></td>
+                <td><%=item.nname%></td>
+                <td><%=item.dname%></td>
+                <td><%=item.status%></td>
+                <td>
+                  <a href="/edit_patient?id=<%=item.pid%>" class="btn btn-outline-primary btn-sm"><i class="fas fa-pen me-1"></i></a>
+                  <a href="/delete_patient?id=<%=item.pid%>" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash me-1"></i></a>
+                  <%
+                    if(item.bill==="false")
+                    {
+                  %>
+                  <a href="" class="btn btn-sm" style="background-color: gray; color: white;"><i class="fas fa-trash me-1"></i>Bill</a>
+                  <%
+                    }
+                    else
+                    {
+                  %>
+                  <a href="/bill?id=<%=item.pid%>" class="btn btn-sm" style="background-color:#28a745; color: white;"><i class="fas fa-trash me-1"></i>Bill</a>
+                  <%
+                    }
+                  %>
+
+                  
+                </td>
+               </tr>
+            <%
+                  })
+              }
+            %>
+          </tbody>
+        </table>
+      </div>
+
+      </div>
+  </div>
 </body>
 </html>

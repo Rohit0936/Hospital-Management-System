@@ -46,15 +46,10 @@
     <div class="container py-4">
       <nav class="navbar navbar-light bg-light">
         <div class="container-fluid">
-          <form class=>
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" onkeyup="doc(this.value)">
+          <form class="w-100" >
+            <input class="form-control w-100" type="search" placeholder="Search" aria-label="Search" onkeyup="doc(this.value)">
           </form>
-          <nav >
-            <form class="container-fluid justify-content-start">
-              <a href="/showdoctor?status=1" class="btn btn-sm btn-outline-secondary" >Avaiable</a>
-              <a href="/showdoctor?status=0" class="btn btn-sm btn-outline-secondary" >Not Avaiable</a>
-            </form>
-          </nav>
+          
         </div>
       </nav>
  <br>
@@ -90,22 +85,7 @@
           <p class="mb-1"><i class="fas fa-phone me-1 text-primary"></i> +91 <%=item.doctor_contact%></p>
           <p class="mb-1"><i class="fas fa-briefcase me-1 text-success"></i> <%=item.doctor_Experience%> years experience</p>
           <p class="mb-3"><i class="fas fa-envelope me-1 text-warning"></i><%=item.doctor_email%></p>
-          <%
-             if(item.Status==1)
-             {
-          %>
-
-          <h6><label >Status:</label>   <label for="" style="color: green;">Avaiable</label></h6>
-          <%
-             }
-             else
-             {
-
-            %>
-            <h6><label >Status:</label>   <label for="" style="color: red;">Not Avaiable</label></h6>
-            <%
-             }
-          %>
+          
         </div>
         <div class="card-footer bg-white d-flex justify-content-center gap-2">
           <a href="/updatedoctor?did=<%=item.Did%>" class="btn btn-outline-primary btn-sm px-3"><i class="fas fa-pen me-1"></i>Edit</a>

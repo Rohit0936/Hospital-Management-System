@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hospital Billing Form</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" />
+
+    <style>
+        .header-border {
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .flex-container {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .flex-container > div {
+            flex: 1;
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+
+            body {
+                background: white !important;
+            }
+        }
+
+        /* Additional CSS for Input Labels */
+        .form-label {
+            font-weight: 600;
+            color: #1a3c34;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05rem;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .form-label:hover {
+            color: #0d6efd; /* Bootstrap primary color for hover effect */
+        }
+
+        .row .col-md-6 .form-label {
+            display: block;
+            padding-left: 0.25rem;
+        }
+
+        /* Ensure labels align properly with inputs */
+        .form-control {
+            border-radius: 0.375rem;
+            border: 1px solid #ced4da;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        /* Add subtle background to highlight required fields (optional) */
+        .form-label::after {
+            content: '*';
+            color: #dc3545;
+            margin-left: 0.25rem;
+            font-size: 0.8rem;
+        }
+
+        /* Remove ::after for non-required fields if needed (customize as per your logic) */
+        .form-label[for="dischargeDate"]::after {
+            content: none;
+        }
+
+        table{
+           text-align: center;
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+    <div class="container my-5">
+        <div class="bg-white p-4 shadow-sm rounded-3">
+            <!-- Hospital Details -->
+            <div class="text-center header-border pb-3 mb-4">
+                <h3 class="mb-2">RS HealthCare Hospital</h3>
+                <p class="text-muted small">123 Health Street, Pune, State Maharashtra</p>
+                <p class="text-muted small">Phone: (123) 456-7890 | Email: info@rshealthcare.com</p>
+                <p class="text-muted small">Tax ID: SGH-987654321</p>
+            </div>
+
+            <!-- Doctor Details -->
+            <div class="mb-4">
+                <h5 class="h4 mb-3">Doctor Details</h5>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Doctor Name</label>
+                        <input type="text" class="form-control" value="<%=bill.doctor_name%>" disabled/>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Specialization</label>
+                        <input type="text" class="form-control" value="<%=bill.doctor_specialization%>" disabled/>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patient Details -->
+            <div class="mb-4">
+                <h5 class="h4 mb-3">Patient Details</h5>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Patient Name</label>
+                        <input type="text" class="form-control" value="<%=bill.patient_name%>" disabled/>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Patient Contact</label>
+                        <input type="contact" class="form-control" value="<%=bill.patient_contact%>" disabled/>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Admission Date</label>
+                        <input type="text" class="form-control" value="<%=bill.admitted_date.getDate()%>-<%=bill.admitted_date.getMonth()%>-<%=bill.admitted_date.getFullYear()%>" disabled/>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Discharge Date</label>
+                        <input type="text" id="disdate" class="form-control" disabled />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Room No</label>
+                        <input type="text" class="form-control" value="<%=bill.room_no%>" disabled/>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charges Section -->
+            <div class="mb-4">
+                <h5 class="h4 mb-3">Charges</h5>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Doctor Charge ($)</label>
+                        <input type="number" class="form-control" placeholder="Enter doctor charge" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Room Charge ($)</label>
+                        <input type="number" class="form-control" value="<%=bill.room_charges%>" disabled/>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Medicine Charge ($)</label>
+                        <input type="number" class="form-control" placeholder="Enter medicine charge" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Nurse Charge ($)</label>
+                        <input type="number" class="form-control" placeholder="Enter nurse charge" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calculate Bill Button -->
+            <div class="text-end mb-4 no-print">
+                <button type="button" class="btn btn-primary" onclick="showBillSummary()">Calculate Bill</button>
+            </div>
+
+            <!-- Bill Summary - Hidden Initially -->
+            <div id="billSummary" class="mb-4 d-none">
+                <h5 class="h4 mb-3">Bill Summary</h5>
+                <div class="card border-1 shadow-sm">
+                    <div class="card-body">
+                       <h5>Doctor Charge</h5>
+                       <h5>Room Charge</h5>
+                       <h5>Nurse Charge</h5>
+                        <table class="table table-striped mb-0">
+                            <thead class="table-light">
+                                <tr >
+                                    <td colspan="5" style=" text-align: center;"><h5>Medicine Charges</h5></td>
+                                </tr>
+                                <tr>
+                                    <th>Sr.no</th>
+                                    <th>Medicine</th>
+                                    <th>Price</th>
+                                    <th>Qty</th>
+                                    <th>Total</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                               
+                                <%
+                                    let total=0;
+                                    medi.forEach((item,index)=>{
+                                    total=total+(item.price*item.qty);
+                                %>
+                                <tr>
+                                    <td><%=(index+1)%></td>
+                                    <td><%=item.medicine_name%></td>
+                                    <td><%=item.price%></td>
+                                    <td><%=item.qty%></td>
+                                    <td><%=(item.qty*item.price)%></td>
+                                </tr>
+                                <%
+                                    })
+                                %>
+                                
+                            </tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><h5>Total:</h5></td>
+                                <td><h6><%=total%></h6></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><h5>GST(18%)</h5></td>
+                                <td><h6><%=total*0.18%></h6></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><h5>Total Bill:</h5></td>
+                                <td><h6><%=total+(total*0.18)%></h6></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="d-flex justify-content-between mt-4 no-print">
+                    <a href="/show_patient" class="btn btn-secondary me-2"><i class="fas fa-arrow-left me-1"></i> Back </a>
+                    <button onclick="window.print()" class="btn btn-dark">
+                        <i class="fas fa-print me-1"></i> Print Bill
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let date=new Date();
+        let str=date.getDate()+"-"+date.getMonth()+"-"+date.getFullYear();
+
+        let input=document.getElementById("disdate").value=str;
+        console.log(str);
+        function showBillSummary() {
+            document.getElementById("billSummary").classList.remove("d-none");
+            document.getElementById("billSummary").scrollIntoView({ behavior: "smooth" });
+        }
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
