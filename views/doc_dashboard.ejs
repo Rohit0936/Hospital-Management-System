@@ -3,21 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Reception Dashboard</title>
+  <title>Doctor Dashboard</title>
 
   <!-- Bootstrap & FontAwesome -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-  <link rel="stylesheet" href="/sidebar.css" />
-  <link rel="stylesheet" href="/show_doc.css" />
   <script type="text/javascript" src="searchdoc.js"></script>
 
   <style>
     body {
-      background: linear-gradient(120deg, #a1c4fd, #c2e9fb);
-      min-height: 100vh;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+  background: linear-gradient(to right, #2980b9, #6dd5fa); /* smoother blue blend */
+  font-family: 'Segoe UI', sans-serif;
+  transition: background 0.6s ease-in-out, color 0.4s ease-in-out;
+}
+
 
     .page-wrapper {
       margin-left: 250px;
@@ -35,39 +34,22 @@
       background: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 20px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 0 10px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
       transition: transform 0.4s ease, box-shadow 0.4s ease;
       position: relative;
       overflow: hidden;
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(12px);
     }
 
     .doctor-card-new:hover {
-      transform: translateY(-12px) scale(1.03);
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15), 0 0 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .doctor-card-new::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.2), transparent);
-      transform: rotate(45deg);
-      z-index: 0;
-      transition: transform 0.6s ease;
-    }
-
-    .doctor-card-new:hover::before {
-      transform: rotate(60deg);
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
     }
 
     .doctor-card-new .card-content {
+      padding: 30px;
       position: relative;
       z-index: 1;
-      padding: 30px;
     }
 
     .header-container {
@@ -75,31 +57,20 @@
       align-items: center;
       justify-content: center;
       gap: 15px;
-      position: relative;
+      margin-bottom: 1.5rem;
     }
 
     .header-logo {
       font-size: 2.5rem;
-      color: #00cec9;
-      transition: color 0.3s ease;
-    }
-
-    .header-logo:hover {
-      color: #00a8a8;
+      color: #e74c3c;
+      margin-right: 10px;
     }
 
     .text-dark {
-      color: #2d3436 !important;
+      color: #1e272e !important;
       font-weight: 700;
       letter-spacing: 0.5px;
     }
-
-    .text-muted {
-      color: #dfe6e9 !important;
-      font-size: 1.15rem;
-      line-height: 1.6;
-      font-weight: 400;
-    } 
 
     .card-grid {
       display: grid;
@@ -117,77 +88,96 @@
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
       transition: transform 0.4s ease, box-shadow 0.4s ease;
       position: relative;
-      overflow: hidden;
       backdrop-filter: blur(8px);
     }
 
     .feature-card:hover {
-      transform: translateY(-10px) scale(1.05);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-    }
-
-    .feature-card::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, rgba(0, 206, 201, 0.1), rgba(52, 152, 219, 0.1));
-      z-index: 0;
-      opacity: 0;
-      transition: opacity 0.4s ease;
-    }
-
-    .feature-card:hover::after {
-      opacity: 1;
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
     }
 
     .feature-card i {
       font-size: 3rem;
-      color: #00cec9;
       margin-bottom: 15px;
-      transition: transform 0.3s ease;
-    }
-
-    .feature-card:hover i {
-      transform: scale(1.2);
     }
 
     .feature-card h4 {
       color: #2d3436;
       font-weight: 600;
-      margin-bottom: 12px;
       font-size: 1.3rem;
+      margin-bottom: 12px;
     }
 
     .feature-card p {
-      color: #dfe6e9;
+      color: #f5f6fa;
     }
 
-    /* Color-coded icons */
-    .feature-card:nth-child(1) i { color: #55efc4; }
-    .feature-card:nth-child(2) i { color: #fdcb6e; }
-    .feature-card:nth-child(3) i { color: #ff7675; }
-    .feature-card:nth-child(4) i { color: #a29bfe; }
+    .feature-card:nth-child(1) i { color: #00a8ff; }
+    .feature-card:nth-child(2) i { color: #9c88ff; }
+    .feature-card:nth-child(3) i { color: #e84118; }
 
-    /* Welcome bar animation */
+    .gradient-divider {
+      height: 4px;
+      width: 100px;
+      background: linear-gradient(90deg, #00a8ff, #0097e6, #8c7ae6);
+      background-size: 200% 100%;
+      border-radius: 3px;
+      animation: gradientShift 4s ease-in-out infinite;
+    }
+
     @keyframes gradientShift {
       0% { background-position: 0% 50%; }
       100% { background-position: 100% 50%; }
     }
 
-    .gradient-divider {
-      height: 5px;
+    .doctor-avatar {
       width: 100px;
-      background: linear-gradient(90deg, #00cec9, #0984e3, #6c5ce7);
-      background-size: 200% 100%;
-      border-radius: 3px;
-      animation: gradientShift 4s ease-in-out infinite;
+      height: 100px;
+      border: 3px solid #e74c3c;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+
+    .doctor-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .patient-card {
+      border-radius: 12px;
+      transition: transform 0.2s ease;
+    }
+
+    .patient-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .patient-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: #e74c3c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+
+    .truncate-text {
+      display: -webkit-box;
+       
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   </style>
 </head>
 <body>
+
 
   <!-- Include reusable sidebar -->
   <%- include("doctor_slider.ejs") %>
@@ -197,14 +187,14 @@
       <!-- Welcome Message Card -->
       <div class="row justify-content-center">
         <div class="col-md-10 col-lg-8">
-          <div class="card doctor-card-new shadow p-4 text-center">
+          <div class="card doctor-card-new text-center">
             <div class="card-content">
-              <div class="header-container mb-4">
-                <i class="fas fa-user-nurse header-logo"></i>
+              <div class="header-container">
+                <i class="fas fa-user-md header-logo"></i>
                 <h2 class="text-dark mb-0">Welcome Doctor</h2>
               </div>
-              <!-- Animated Gradient Divider -->
               <div class="gradient-divider mx-auto mb-4"></div>
+              <h3>Dr. <%= data[0] %></h3>
             </div>
           </div>
         </div>
@@ -213,21 +203,20 @@
       <!-- Feature Cards -->
       <div class="card-grid mt-5">
         <div class="feature-card">
-          <i class="fas fa-user-plus"></i>
-          <h4>Patient Admissions</h4>
-          <p>Streamline patient registration and admissions with ease.</p>
+          <i class="fas fa-notes-medical"></i>
+          <h4>Medical Records</h4>
+          <p>Access and manage patient health records efficiently.</p>
         </div>
         <div class="feature-card">
-          <i class="fas fa-bed"></i>
-          <h4>Room Management</h4>
-          <p>Efficiently assign and manage hospital rooms.</p>
+          <i class="fas fa-calendar-check"></i>
+          <h4>Appointments</h4>
+          <p>View and update your scheduled appointments.</p>
         </div>
         <div class="feature-card">
-          <i class="fas fa-user-md"></i>
-          <h4>Nurse Coordination</h4>
-          <p>Coordinate with nurses for seamless patient care.</p>
+          <i class="fas fa-stethoscope"></i>
+          <h4>Diagnosis Tools</h4>
+          <p>Use diagnostic tools to support your consultations.</p>
         </div>
-
       </div>
     </div>
   </div>

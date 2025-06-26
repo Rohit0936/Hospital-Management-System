@@ -82,7 +82,8 @@ let doc=(str)=>{
                         let div4=document.createElement("div");
                         div4.setAttribute("class","card-footer bg-white d-flex justify-content-center gap-2");
                         let a=document.createElement("a");
-                        a.setAttribute("href","/updatedoctor?did="+item.Did);
+                        console.log(item.did);
+                        a.setAttribute("href","/updatedoctor?did="+item.did);
                         a.setAttribute("class","btn btn-outline-primary btn-sm px-3");
                         i=document.createElement("i");
                         i.setAttribute("class","fas fa-pen me-1");
@@ -386,7 +387,7 @@ function room(s)
                 else
                 {
                     let h5=document.createElement("h5")
-                    h5.innerHTML="Room No: "+item.room_no;
+                    h5.innerHTML="<h5 class='fw-bold text-dark mb-1'>Room No: "+item.room_no+"</h5>";
                     div3.appendChild(h5);
                 }
 
@@ -395,7 +396,7 @@ function room(s)
                 i=document.createElement("i");
                 i.setAttribute("class","fas fa-hospital me-1 text-danger");
                 p.appendChild(i);
-                p.append(item.Room_type);
+                p.append(item.room_type);
                 div3.appendChild(p);
 
                 p=document.createElement("p");
@@ -403,7 +404,7 @@ function room(s)
                 i=document.createElement("i");
                 i.setAttribute("class","fas fa-money-bill me-1 text-success");
                 p.appendChild(i);
-                p.append("₹"+item.Room_Charges+"/day");
+                p.append("₹"+item.room_charges+"/day");
                 div3.appendChild(p);
 
                 if(item.room_status==="true")

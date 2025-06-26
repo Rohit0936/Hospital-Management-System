@@ -1,52 +1,48 @@
-Admin:-
-CREATE TABLE Admin(aid INT PRIMARY KEY Auto_Increment,Name VARCHAR(100),Contact varchar(10) 
-unique not null,adminUser_Name varchar(100) unique not null,Admin_Password varchar(100) unique not null);
+create table admin(aid int primary key auto_increment,Name varchar(100),Contact varchar(10) unique,adminUser_Name
+ varchar(100) unique, Admin_Password varchar(100) unique);
 
--------------------------------------------------------------------------------------------------------------------------------------------------------------
-User:-
-CREATE TABLE User(uid INT PRIMARY KEY AUTO_INCREMENT,UserName varchar(100) unique not null,user_password varchar(100) unique not null,Role enum('Doctor','Reception'));
 
--------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
+create table user(uid int primary key auto_increment,UserName varchar(100) unique not null,user_password varchar(100)
+unique not null,Role enum('Doctor,Reception'));
 
-Doctor:-
-create table Doctor(Did int PRIMARY KEY Auto_Increment,doctor_name varchar(100) not null,doctor_email varchar(100) not null unique,doctor_specialization VARCHAR(100)NOT NULL,
-doctor_contact varchar(10) unique not null,doctor_Experience INT not null,Status BOOLEAN DEFAULT(TRUE),
-Doctor_Image varchar(100),uid int,foreign key(uid) references user(uid) on delete cascade,aid int,foreign key(aid) references admin(aid));
+------------------------------------------------------------------------------------------------------------------
+create table doctor(did int primary key auto_increment,doctor_name varchar(100) unique not null,doctor_email
+varchar(100) unique not null,doctor_specialization varchar(100) not null,doctor_contact varchar(10) unique,
+doctor_Expreience int not null,Doctor_Image varchar(100),uid int,foreign key(uid) references user(uid)
+on delete cascade on update cascade,aid int ,foreign key(aid) references admin(aid) on delete cascade on update cascade);
 
--------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
 
-Room:-
- create table room(room_id int primary key auto_increment,Room_type enum('ICU','AC','General') 
- not null,room_status enum('available','not available'),Room_Charges int not null);
- -------------------------------------------------------------------------------------------------------------------------------------------------------------
- 
- Nurse:-
- create table nurse(nid int primary key auto_increment,nurse_name varchar(100) not null,nurse_email varchar(100) unique not null,
- nurse_contact varchar(10) unique not null,nurse_shift enum('Day','Night'));
- 
--------------------------------------------------------------------------------------------------------------------------------------------------------------
-Reception:-
+create table nurse(nid int primary key auto_increment,nurse_name varchar(100) not null,nurse_email varchar(100)
+unique not null,nurse_contact varchar(10) unique not null,nurse_shift enum('Day,Night'),nurse_image varchar(100));
+------------------------------------------------------------------------------------------------------------------
 
- create table reception(rid int primary key auto_increment,reception_name varchar(100) not null,reception_contact varchar(100) unique not null,
- reception_email varchar(100) unique not null,uid int,foreign key(uid) references user(uid) on delete cascade,aid int,foreign key(aid) references admin(aid) on update cascade on delete set null,rec_Image varhar(100));
+create table reception(rid int primary key auto_increment,reception_name varchar(100) not null,reception_contact
+varchar(10) unique not null,reception_email varchar(100) unique not null,uid int,foreign key(uid) references user(uid) 
+on delete cascade on update cascade,aid int, foreign key(aid) references admin(aid) on delete cascade on update cascade);
+------------------------------------------------------------------------------------------------------------------
 
---------------------------------------------------------------------------------------------------------------------------------------------------------------
-Patient:-
+create table room(room_id int primary key auto_increment,room_type enum('ICU','AC','General'),room_charges int not null,
+room_no int unique,room_status enum('true','false') default('true'));
+------------------------------------------------------------------------------------------------------------------
 
-create table patientdetail(pid int primary key auto_increment,patient_name varchar(100) not null,patient_age int not null,patient_gender enum('male','female') not null,
-patient_contact varchar(10) unique not null,patient_issue varchar(255) not null,admitted_date date not null,discharge_date date not null,
-room_id int,foreign key(room_id) references room(room_id) on delete set null,nid int,foreign key(nid) references nurse(nid) on delete set null,Did int,foreign key(Did) references Doctor(Did) on delete set null,Status enum('Admit','Discharge'))
+create table patientdetail(pid int primary key auto_increment,patient_name varchar(100) not null,patient_age int not 
+null,patient_gender enum('Male','Female'),patient_contact varchar(10) unique not null,patient_issue varchar(100) not null,
+admitted_date date not null,discharge_date varchar(100) default('no'),room_id int,foreign key(room_id) references room(room_id)
+ on delete cascade on update cascade,nid int,foreign key(nid) references nurse(nid) on delete cascade on update cascade,Did int,foreign 
+key(Did) references Doctor(did) on update cascade on delete cascade,Status enum('Admit','Discharge') default('Admit'),bill enum('true','false'));
 
---------------------------------------------------------------------------------------------------------------------------------------------------------------
-medical:-
+------------------------------------------------------------------------------------------------------------------
 
-CREATE TABLE medical(mid int primary key auto_increment,pid int,foreign key(pid) references patient(pid),
-medicine_name varchar(100) unique not null,medicine_price decimal(10,2));
+CREATE TABLE medicine (mid INT PRIMARY KEY,medicine_name VARCHAR(100),price DECIMAL(10,2));
+------------------------------------------------------------------------------------------------------------------
 
---------------------------------------------------------------------------------------------------------------------------------------------------------------
-Bill:-
+create table bill(bill_id int primary key auto_increment,pid int, foreign key(pid) references patientdetail(pid) 
+on update cascade on delete set null,room_charges int not null,doctor_charges int not null,doctor_name varchar(100),nurse_charges int not null,
+medicine_charges int not null,total_amount int not null,billing_date Date not null);
+------------------------------------------------------------------------------------------------------------------
 
---------------------------------------------------------------------------------------------------------------------------------------------------------------
 create trigger for delete patient that time automatic change room_status.
 
 mysql> create trigger deletepatient after delete on patientdetail
@@ -62,5 +58,5 @@ create trigger updatepatient after update on patientdetail
      if(old.room_id!=new.room_id) then
      update room set room_status="true" where room_id=old.room_id;
      update room set room_status="false" where room_id=new.room_id;
-     end if;
-     end //
+     end if;
+     end //

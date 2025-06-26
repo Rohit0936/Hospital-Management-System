@@ -3,42 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <title>Admin Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Bootstrap CDN -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="login.css">
-  <script type="text/javascript" src="/validation.js"></script>
+
 </head>
 <body>
 
 <div class="container">  
-  <!-- Left: Form -->
-  <div class="form-container">
-   <form action="/loginuser" name="frm" method="post">
-  <h1>Sign In</h1>
-
-  <label ><h6>User Name</h6></label>
-  <input type="text" id="login" name="username" placeholder="Username" onclick="user()"/>
-
-  <label ><h6>Password 🔒</h6></label>
-  <input type="password" id="login"  name="password" placeholder="Password" onclick="user()"/>
-
-  <label for="department">Select Department</label>
-  <select class="form-select" id="department" name="department">
-    <option selected disabled>Choose an option</option>
-    <option value="admin">Admin</option>
-    <option value="doctor">Doctor</option>
-    <option value="Reception">Reception</option>
-  </select>
-
-  <button>Sign In</button>
-  <label id="lo"><%=msg%></label>
-</form>
-  </div>
-
-  <!-- Right: Message Panel -->
+  <!-- Left: Welcome Message -->
   <div class="message-container">
     <h2>Welcome</h2>
     <p>Login to manage hospital activities, patient records,<br> appointments, billing and more.</p>
-    <img src="./logo.jpg" alt="Logo" width="80" class="mt-3" />
+    <img src="" width="80" class="mt-3" />
+  </div>
+
+  <!-- Right: Login Form -->
+  <div class="form-container">
+    <form action="/loginuser" name="frm" method="post">
+      <h1>Sign In</h1>
+
+      <label><h6>User Name 🧑</h6></label>
+      <input type="text" name="username" placeholder="Enter username" required>
+
+      <label><h6>Password 🔒</h6></label>
+      <input type="password" name="password" placeholder="Enter password" required>
+
+      <label for="department"><h6>Department 🏥</h6></label>
+      <select class="form-select" id="department" name="department" required>
+        <option selected disabled>Choose an option</option>
+        <option value="admin">Admin</option>
+        <option value="doctor">Doctor</option>
+        <option value="Reception">Reception</option>
+      </select>
+
+      <button type="submit">Sign In</button>
+      <label id="lo"><%= msg %></label>
+    </form>
   </div>
 </div>
 

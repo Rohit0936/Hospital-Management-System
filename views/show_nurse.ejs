@@ -15,9 +15,35 @@
       padding: 20px;
     }
 
+  
     @media (max-width: 768px) {
       .page-wrapper {
         margin-left: 0;
+      }
+    }
+
+    @media (max-width:450px)
+    {
+      .search{
+        width: 100%;
+        padding-bottom: 10px;
+      }
+
+      #btn a{
+       
+        margin-left: 35px;
+      }
+    }
+
+      @media (max-width: 1000px){
+        .search{
+          width: 100%;
+          padding-bottom: 15px;
+        }
+
+         #btn a{
+       
+        margin-left: 10px;
       }
     }
 
@@ -46,11 +72,11 @@
     <div class="container py-4">
       <nav class="navbar navbar-light bg-light">
         <div class="container-fluid">
-          <form>
+          <form class="search">
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" onkeyup="nurse(this.value)">
           </form>
-          <nav >
-            <form class="container-fluid justify-content-end">
+          <nav style="width: 100%; ">
+            <form class="container-fluid justify-content-end" id="btn">
               <a href="/show_nurse?s=Day" class="btn btn btn-outline-secondary" style="width: 100px;">Day</a>
               <a href="/show_nurse?s=Night" class="btn btn btn-outline-secondary" style="width: 100px;">Night</a>
             </form>

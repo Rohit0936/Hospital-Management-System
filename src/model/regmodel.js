@@ -1,6 +1,7 @@
 let conn=require("../config/db.js");
 
 
+
 exports.show=(id)=>{
        return new Promise((resolve,reject)=>{
              conn.query("select role from user where uid=?",[id],(err,result)=>{
@@ -172,6 +173,7 @@ else{
 
 exports.updatdoc=(id)=>{
     return new Promise((resolve,reject)=>{
+      
         conn.query("select *from doctor where Did=?",[id],(err,result)=>{
 
               if(err)
@@ -472,7 +474,7 @@ exports.updatenurse=(id)=>{
 exports.finalnurseupdate=(...data)=>{
 
        return new Promise((resolve,reject)=>{
-       console.log(data);
+      // console.log(data);
               conn.query("update nurse set nurse_name=?, nurse_email=?, nurse_contact=?, nurse_shift=? where nid=?",[...data],(err,result)=>{
 
                      if(err)
@@ -505,8 +507,8 @@ exports.deleteNurse=(id)=>{
 exports.addromm=(data)=>{
 
        return new Promise((resolve,reject)=>{
-
-              conn.query("insert into room values('0','"+data[0]+"','1','"+data[1]+"','"+data[2]+"')",(err,result)=>{
+              //console.log(data);
+              conn.query("insert into room values('0','"+data[0]+"','"+data[1]+"','"+data[2]+"','true')",(err,result)=>{
                      if(err)
                      {
                             console.log(err);
@@ -725,7 +727,7 @@ exports.updatepatient=(id)=>{
 
        return new Promise((resolve,reject)=>{
 
-              conn.query("select patient_name as 'pname',patient_age as age,patient_gender as gender,patient_contact as 'contact',room_no,room_type as 'roomtype',nurse_name as 'nname',doctor_name as 'dname',patient_issue as 'issue',p.nid,p.did,p.room_id,bill from patientdetail p inner join doctor d on d.did=p.Did inner join nurse n on n.nid=p.nid inner join room r on r.room_id=p.room_id",[id],(err,result)=>{
+              conn.query("select patient_name as 'pname',patient_age as age,patient_gender as gender,patient_contact as 'contact',room_no,room_type as 'roomtype',nurse_name as 'nname',doctor_name as 'dname',patient_issue as 'issue',p.nid,p.did,p.room_id,bill from patientdetail p inner join doctor d on d.did=p.Did inner join nurse n on n.nid=p.nid inner join room r on r.room_id=p.room_id where pid=?",[id],(err,result)=>{
                      if(err)
                      {
                             reject(err)
@@ -777,7 +779,6 @@ exports.finalupdatepatient=(...data)=>{
                      reject(err);
                      }
                      else{
-                            resolve(result);
                      }
               })
        });
@@ -896,7 +897,7 @@ exports.bill=(id)=>{
 
        return new Promise((resolve,reject)=>{
 
-              conn.query("select doctor_name,doctor_specialization,patient_name,patient_contact,admitted_date,room_no,room_charges from patientdetail p inner join doctor d on d.did=p.did inner join room r on r.room_id=p.room_id where pid=?",[id],(err,result)=>{
+              conn.query("select pid,doctor_name,doctor_specialization,patient_name,patient_contact,admitted_date,room_no,room_charges from patientdetail p inner join doctor d on d.did=p.did inner join room r on r.room_id=p.room_id where pid=?",[id],(err,result)=>{
                      if(err)
                      {
                             reject(err);
@@ -915,3 +916,45 @@ exports.bill=(id)=>{
               })
        });
 }
+
+exports.submitbill=(pid,room_charges,doctor_charges,nurse_charges,date)=>{
+
+       return new Promise((resolve,reject)=>{
+
+              conn.query("select price,qty from medicine m inner join patientmedicine p on m.mid=p.mid where p.pid=?",[pid],(err,result)=>{
+                  if(err)
+                  {
+                     console.log(err);
+                  }
+                  else{
+                     let medicinecharges=0;
+                     result.forEach((item)=>{
+                            medicinecharges=medicinecharges+(item.price*item.qty);
+                     });
+                     medicinecharges=medicinecharges+medicinecharges*0.18;
+                   
+                     let toatl_amount=parseFloat(medicinecharges)+parseFloat(doctor_charges)+parseFloat(nurse_charges)+parseFloat(room_charges);
+                     
+                     conn.query("insert into bill values('0',?,?,?,?,?,?,?)",[pid,room_charges,doctor_charges,nurse_charges,medicinecharges,toatl_amount,date],(err,result)=>{
+                            if(err)
+                            {
+                                   reject(err);
+                            }
+                            else{
+                                   conn.query("update patientdetail set discharge_date=?,Status='Discharge' where pid=?",[date,pid],(err,result)=>{
+                                          if(err)
+                                          {
+                                                 reject(err);
+                                          }
+                                          else
+                                          {
+                                                   resolve(result);
+                                          }
+                                   })
+                                 
+                            }
+                     })
+                  }
+              });
+       });
+};

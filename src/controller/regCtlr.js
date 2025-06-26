@@ -153,6 +153,7 @@ exports.regDoctor = async (req, res) => {
 
     try {
         await u.regDoctor(name, email, Specialization, contact, experience, image, role, password);
+       
         res.render("reg_doc.ejs", { msg: "Doctor registration Successfully" });
     } catch (err) {
         console.log(err);
@@ -182,7 +183,7 @@ exports.regDoctor = async (req, res) => {
     uid=id;
     let flag=model.updatdoc(id)
     flag.then((u)=>{
-
+          // console.log("hello");
         res.render("updatedoctor.ejs",{data:u,msg:""});
     });
     
@@ -195,7 +196,9 @@ exports.regDoctor = async (req, res) => {
     flag.then((r)=>{
         if(r)
             {
-                res.render("updatedoctor.ejs",{data:"",msg:"Update successfully"});
+                
+                 res.redirect("/showdoctor?status=n");
+                //res.render("updatedoctor.ejs",{data:"",msg:"Update successfully"});
             }
             else{
                 res.render("updatedoctor.ejs",{data:"",msg:"Update failed"});
@@ -250,7 +253,7 @@ exports.regrecep= async (req,res)=>{
          res.render("reg_rec.ejs",{msg:"Receptionists registration Successfully"});
         }
         catch(err){
-            
+            console.log(err);
          res.render("reg_rec.ejs",{msg:"This user name already present"});
         }
 }
@@ -294,7 +297,8 @@ exports.recefinalpudate=(req,res)=>{
 
  let flag=model.recepudate(name,email,contact,rid);
  flag.then((f)=>{
-     res.render("recepupdate.ejs",{data:"",msg:"Update Successfully"});
+    res.redirect("/show_rec");
+    // res.render("recepupdate.ejs",{data:"",msg:"Update Successfully"});
  }).catch((err)=>{
      res.send("<h1>Something went wrong</h1>")
  })
@@ -497,13 +501,13 @@ exports.addromm= async (req,res)=>{
         }
     try{
         let ro=new room();
-      
+      //console.log("hello");
       await ro.addromm(room_type,room_charges,id);
 
         res.render("add_room.ejs",{data:arr,msg:"Room Add Successfully"});
     }
     catch(err)
-    {
+    {  console.log(err);
         res.render("add_room",{data:arr,msg:"Room Id already present"})
         //res.send("<h1>Something went wrong</h1>")
     }
@@ -659,7 +663,7 @@ let arr=[req.session.name,req.session.image,req.session.uid];
     req.session.image=arr[1];
 if(typeof(arr[0])=="undefined")
     {
-        return res.send("<h1>Some thing went wrong</h1>")
+        return res.redirect("/");
     }
     try{
        // res.render("reg_patient.ejs",{});
@@ -683,7 +687,7 @@ exports.show_patient=(req,res)=>{
     req.session.image=arr[1];
     if(typeof(arr[0])=="undefined")
         {
-            return res.send("<h1>Some thing went wrong</h1>")
+            return res.redirect("/");
         }
         let flag=model.show_patient()
          flag.then((r)=>{
@@ -724,7 +728,7 @@ exports.updatepatient=(req,res)=>{
 exports.finalupdatepatient=(req,res)=>
 {
     let {patientname,patientage,gender,contact_number,medical_issue,room,nurse,doctor}=req.body;
-
+    console.log(uid);
     try{
         model.finalupdatepatient(patientname,patientage,gender,contact_number,medical_issue,room,nurse,doctor,uid);
         res.redirect("/show_patient");
@@ -790,6 +794,21 @@ exports.showmedicine=(req,res)=>{
    });
 }
 
+exports.addmedicine= async(req,res)=>{
+
+    let pid=req.query.pid;
+    let {medicine,qty}=req.body;
+     try{
+       await  model.addmedicine(medicine,pid,qty);
+       res.redirect("/showmedicinefrom?id="+pid);
+     }
+     catch(err){
+        console.log(err);
+        res.send("<h1>Something went wrong</h1>");
+     }
+};
+
+
 exports.prescription=(req,res)=>{
     let pid=req.query.pid;
    // let {medicine,qty}=req.body;
@@ -807,19 +826,6 @@ exports.prescription=(req,res)=>{
     //res.render("Prescription.ejs");
 }
 
-exports.addmedicine= async(req,res)=>{
-
-    let pid=req.query.pid;
-    let {medicine,qty}=req.body;
-     try{
-       await  model.addmedicine(pid,medicine,qty);
-       res.redirect("/showmedicinefrom?id="+pid);
-     }
-     catch(err){
-        console.log(err);
-        res.send("<h1>Something went wrong</h1>");
-     }
-};
 
 // update patient status 
 exports.updatepatientstatus=(req,res)=>{
@@ -836,16 +842,39 @@ exports.updatepatientstatus=(req,res)=>{
 }
 
 // bill
+
 exports.bill=(req,res)=>{
 
    // console.log(req.query.id);
     let flag=model.bill(req.query.id);
      flag.then((r)=>{
-          console.log(r)
+        //  console.log(r)
           res.render("bill.ejs",{bill:r.b,medi:r.m});
      }).catch((err)=>{
 
         res.send("<h1>Something went wrong</h1>");
      });
    // res.render("bill.ejs");
+}
+
+exports.submitbill=async(req,res)=>{
+//console.log(medicine);
+
+let pid=req.query.id;
+ 
+
+    let{room_charges,doctor_charges,nurse_charges,day}=req.body;
+    let date=new Date();
+    date=date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+    //console.log(room_charges*day,doctor_charges,nurse_charges,date);
+
+   
+    try{
+         let save= await model.submitbill(pid,room_charges*day,doctor_charges,nurse_charges,date);
+         res.redirect("/show_patient");
+    }
+    catch(err)
+    {
+        console.log(err);
+    }
 }

@@ -6,9 +6,6 @@
   <title>Show Rooms</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-  <link rel="stylesheet" href="/sidebar.css" />
-  <link rel="stylesheet" href="/show_doc.css" />
-  <script type="text/javascript" src="searchdoc.js"></script>
   <style>
     .page-wrapper {
       margin-left: 250px;
@@ -18,119 +15,107 @@
     @media (max-width: 768px) {
       .page-wrapper {
         margin-left: 0;
+        padding: 10px;
       }
     }
 
-    /* Internal CSS for header logo */
-    .header-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 1.5rem;
+    #btn a {
+      margin: 5px;
     }
 
-    .header-logo {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background-color: #e74c3c;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 24px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
-      margin-right: 10px;
+    @media (max-width: 576px) {
+      #navbar{
+        margin-top: 30px;
+      }
+      #btn {
+        flex-direction: column;
+       align-items: center;
+       padding-left: 10px;       
+      }
+
+      #btn a {
+        width: 50%;
+      }
+    }
+
+    .room-icon {
+      font-size: 40px;
+      color: #007bff;
     }
   </style>
 </head>
 <body>
+
   <%- include("dashboard.ejs") %>
 
   <div class="page-wrapper">
     <div class="container py-4">
-      <nav class="navbar navbar-light bg-light">
-        <div class="container-fluid">
-          <form class=>
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" onkeyup="room(this.value)">
-          </form>
-          <nav >
-            <form class="container-fluid justify-content-start">
-              <a href="/show_room?s=General" class="btn btn-sm btn-outline-secondary" >General Room</a>
-              <a href="/show_room?s=ICU" class="btn btn-sm btn-outline-secondary" >ICU Room</a>
-              <a href="/show_room?s=AC" class="btn btn-sm btn-outline-secondary" >AC Room</a>
-              <a href="/show_room?s=true" class="btn btn-sm btn-outline-secondary" >Avaiable</a>
-              <a href="/show_room?s=false" class="btn btn-sm btn-outline-secondary" >Not Avaiable</a>
-            </form>
-          </nav>
-        </div>
-      </nav>
-      <br>
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4" id="maindiv">
-        <%
-          if(item.length==0)
-          {
-        %>
-          <h1 style="width:100%; text-align: center;">Room Not Avaiable 😑</h1>
-        <%
-          }
-          else
-          {
-              item.forEach((item,index)=>{
-         %>
-         <div class="col" id="div1">
-          <div class="card h-100 shadow room-card text-center" id="div2">
-            <div class="card-body d-flex flex-column align-items-center p-4" id="div3">
-              <div class="room-icon mb-3" id="div4">
-                <i class="fas fa-bed"></i>
-              </div>
-              <%
-              if(item.Room_type==="General")
-              {
-              %>
-              <h5 class="fw-bold text-dark mb-1">Bed no: <%=item.room_no%></h5>
-              <%
-              }
-              else
-              {
-              %>
-              <h5 class="fw-bold text-dark mb-1">Room no: <%=item.room_no%></h5>
-              <%
-              }
-              %>
-              
-              <p class="text-muted mb-2"><i class="fas fa-hospital me-1 text-danger"></i><%=item.Room_type%></p>
-              <p class="mb-3"><i class="fas fa-money-bill me-1 text-success"></i> ₹<%=item.Room_Charges%>/day</p>
-              <%
-                 if(item.room_status==="true")
-                 {
-              %>
-              <h6><label >Status:</label><label for="" style="color: green;">Avaiable</label></h6>
-              <%
-                 }
-                 else{
 
-              %>
-              <h6><label >Status:</label>   <label for="" style="color: red;">Not Avaiable</label></h6>
-              <%
-                 }
-              %>
-             
+      <!-- Search Box -->
+      <nav class="navbar navbar-light bg-light mb-3" id="navbar">
+        <form class="w-100">
+          <input class="form-control" type="search" placeholder="Search" onkeyup="room(this.value)">
+        </form>
+      </nav>
+
+      <!-- Filter Buttons -->
+      <div class="d-flex flex-wrap justify-content-center mb-4" id="btn">
+        <a href="/show_room?s=General" class="btn btn-outline-secondary btn-sm">General Room</a>
+        <a href="/show_room?s=ICU" class="btn btn-outline-secondary btn-sm">ICU Room</a>
+        <a href="/show_room?s=AC" class="btn btn-outline-secondary btn-sm">AC Room</a>
+        <a href="/show_room?s=true" class="btn btn-outline-secondary btn-sm">Available</a>
+        <a href="/show_room?s=false" class="btn btn-outline-secondary btn-sm">Not Available</a>
+      </div>
+
+      <!-- Room Cards -->
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4" id="maindiv">
+        <% if (item.length == 0) { %>
+          <h4 class="text-center w-100">Room Not Available 😑</h4>
+        <% } else { %>
+          <% item.forEach((item) => { %>
+            <div class="col">
+              <div class="card h-100 text-center shadow">
+                <div class="card-body d-flex flex-column align-items-center">
+                  <div class="room-icon mb-3">
+                    <i class="fas fa-bed"></i>
+                  </div>
+
+                  <% if (item.room_type === "General") { %>
+                    <h5 class="fw-bold">Bed no: <%= item.room_no %></h5>
+                  <% } else { %>
+                    <h5 class="fw-bold">Room no: <%= item.room_no %></h5>
+                  <% } %>
+
+                  <p class="text-muted">
+                    <i class="fas fa-hospital text-danger me-1"></i><%= item.room_type %>
+                  </p>
+                  <p>
+                    <i class="fas fa-money-bill text-success me-1"></i> ₹<%= item.room_charges %>/day
+                  </p>
+
+                  <% if (item.room_status === "true") { %>
+                    <p><strong>Status:</strong> <span style="color: green;">Available</span></p>
+                  <% } else { %>
+                    <p><strong>Status:</strong> <span style="color: red;">Not Available</span></p>
+                  <% } %>
+                </div>
+
+                <div class="card-footer bg-white d-flex justify-content-center gap-2">
+                  <a href="/updateroom?rid=<%= item.room_id %>" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-pen me-1"></i>Edit
+                  </a>
+                  <a href="/deleteroom?rid=<%= item.room_id %>" class="btn btn-outline-danger btn-sm">
+                    <i class="fas fa-trash me-1"></i>Delete
+                  </a>
+                </div>
+              </div>
             </div>
-            <div class="card-footer bg-white d-flex justify-content-center gap-2" id="div5">
-              <a href="/updateroom?rid=<%=item.room_id%>" class="btn btn-outline-primary btn-sm px-3"><i class="fas fa-pen me-1"></i>Edit</a>
-              <a href="/deleteroom?rid=<%=item.room_id%>" class="btn btn-outline-danger btn-sm px-3"><i class="fas fa-trash me-1"></i>Delete</a>
-            </div>
-          </div>
-        </div> 
-         <%
-              })
-          }
-        %>
+          <% }) %>
+        <% } %>
       </div>
     </div>
   </div>
 
-</div> <!-- Closes .main-content from rec_dashbord -->
+  <script src="searchdoc.js"></script>
 </body>
 </html>

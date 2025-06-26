@@ -94,16 +94,19 @@
             </div>
 
             <!-- Doctor Details -->
+             <form action="/sumitbill?id=<%=bill.pid%>" method="post">
+                
+             
             <div class="mb-4">
                 <h5 class="h4 mb-3">Doctor Details</h5>
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label">Doctor Name</label>
-                        <input type="text" class="form-control" value="<%=bill.doctor_name%>" disabled/>
+                        <input type="text" class="form-control" name="doctor_name" value="<%=bill.doctor_name%>" disabled/>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Specialization</label>
-                        <input type="text" class="form-control" value="<%=bill.doctor_specialization%>" disabled/>
+                        <input type="text" class="form-control" name="doctor_specialization" value="<%=bill.doctor_specialization%>" disabled/>
                     </div>
                 </div>
             </div>
@@ -122,11 +125,11 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Admission Date</label>
-                        <input type="text" class="form-control" value="<%=bill.admitted_date.getDate()%>-<%=bill.admitted_date.getMonth()%>-<%=bill.admitted_date.getFullYear()%>" disabled/>
+                        <input type="text" class="form-control" value="<%=bill.admitted_date.getDate()%>-<%=(bill.admitted_date.getMonth()+1)%>-<%=bill.admitted_date.getFullYear()%>" disabled/>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Discharge Date</label>
-                        <input type="text" id="disdate" class="form-control" disabled />
+                        <input type="text" id="disdate" name="discharge_date" class="form-control" onload="discharge()" disabled />
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Room No</label>
@@ -141,19 +144,20 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label">Doctor Charge ($)</label>
-                        <input type="number" class="form-control" placeholder="Enter doctor charge" />
+                        <input type="number" class="form-control" name="doctor_charges" id="d" placeholder="Enter doctor charge"  required/>
+                    </div>
+                    <div class="col-md-6">
+                         <label class="form-label">Nurse Charge ($)</label>
+                        <input type="number" class="form-control" name="nurse_charges" id="n" placeholder="Enter nurse charge" required/>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Room Charge ($)</label>
-                        <input type="number" class="form-control" value="<%=bill.room_charges%>" disabled/>
+                        <input type="number" class="form-control" name="room_charges" id="r" value="<%=bill.room_charges%>"/>
+        
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Medicine Charge ($)</label>
-                        <input type="number" class="form-control" placeholder="Enter medicine charge" />
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Nurse Charge ($)</label>
-                        <input type="number" class="form-control" placeholder="Enter nurse charge" />
+                        <label class="form-label">Enter Total Day ($)</label>
+                        <input type="number" class="form-control" name="day" id="day" placeholder="Enter total day" />
                     </div>
                 </div>
             </div>
@@ -168,9 +172,10 @@
                 <h5 class="h4 mb-3">Bill Summary</h5>
                 <div class="card border-1 shadow-sm">
                     <div class="card-body">
-                       <h5>Doctor Charge</h5>
-                       <h5>Room Charge</h5>
-                       <h5>Nurse Charge</h5>
+                       <h5>Doctor Charge: <span id="doctor"></span></h5>
+                       <h5>Nurse Charge: <span id="nurse"></span></h5>
+                       <h5>Room Charge: <span id="room"></span></h5>
+                       
                         <table class="table table-striped mb-0">
                             <thead class="table-light">
                                 <tr >
@@ -223,7 +228,7 @@
                                 <td></td>
                                 <td></td>
                                 <td><h5>Total Bill:</h5></td>
-                                <td><h6><%=total+(total*0.18)%></h6></td>
+                                <td><h6 id="total" name="total"><%=total+(total*0.18)%></h6></td>
                             </tr>
                         </table>
                     </div>
@@ -232,23 +237,48 @@
                 <!-- Buttons -->
                 <div class="d-flex justify-content-between mt-4 no-print">
                     <a href="/show_patient" class="btn btn-secondary me-2"><i class="fas fa-arrow-left me-1"></i> Back </a>
+                   <button type="submit" class="btn btn-primary">Save</button>
                     <button onclick="window.print()" class="btn btn-dark">
                         <i class="fas fa-print me-1"></i> Print Bill
                     </button>
                 </div>
             </div>
+            </form>
         </div>
     </div>
 
     <script>
         let date=new Date();
-        let str=date.getDate()+"-"+date.getMonth()+"-"+date.getFullYear();
+        let str=date.getDate()+"-"+(date.getMonth()+1)+"-"+date.getFullYear();
 
         let input=document.getElementById("disdate").value=str;
-        console.log(str);
+       // console.log(str);
         function showBillSummary() {
+     
+            
+            
             document.getElementById("billSummary").classList.remove("d-none");
             document.getElementById("billSummary").scrollIntoView({ behavior: "smooth" });
+
+            
+            let d=document.getElementById("d").value;
+            let r=document.getElementById("r").value;
+            let n=document.getElementById("n").value;
+            let day=document.getElementById("day").value;
+
+            let doctor=document.getElementById("doctor").innerHTML=d;
+            let room=document.getElementById("room").innerHTML=(r*day);
+            let nurse=document.getElementById("nurse").innerHTML=n;
+        
+           // alert(r.length);
+      if(d.length!=0 && n.length!=0 && day.length!=0)
+        {
+            let total=document.getElementById("total");
+        // alert("hello");
+            bill=total.innerText;
+            total.innerHTML=(parseInt(bill)+parseInt(d)+(parseInt(r)* parseInt(day))+ parseInt(n));
+        }
+           
         }
     </script>
 

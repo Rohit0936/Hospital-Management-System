@@ -21,7 +21,7 @@
           <div class="mb-2">
             <label>Room Type</label>
             <select name="room_type" required>
-              <option value="<%=item.Room_type%>" selected><%=item.Room_type%></option>
+              <option value="<%=item.Room_type%>" selected><%=item.room_type%></option>
               <option value="ICU">ICU</option>
               <option value="AC">AC</option>
               <option value="General">General</option>
@@ -33,7 +33,7 @@
           </div>          
           <div class="mb-2">
             <label>Room Charges</label>
-            <input type="number" value="<%=item.Room_Charges%>" name="room_charges" placeholder="Enter charges" required>
+            <input type="number" value="<%=item.room_charges%>" name="room_charges" placeholder="Enter charges" required>
           </div>
           <div class="text-center">
             <button type="submit">Add Room</button>

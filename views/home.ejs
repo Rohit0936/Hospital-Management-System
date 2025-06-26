@@ -10,6 +10,8 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css" />
+
+ 
 </head>
 <body>
   <!-- Navbar -->
@@ -28,7 +30,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mx-auto">
           <li class="nav-item">
-            <a class="nav-link active" href="#home">Home</a>
+            <a class="nav-link  " href="#home">Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#services">Services</a>
@@ -47,12 +49,58 @@
     </div>
   </nav>
 
+
+<!-- Slider container with overlay -->
+  <div id="carouselExampleSlidesOnly" class="carousel slide mt-1" data-bs-ride="carousel" data-bs-interval="4000">
+    <!-- Carousel Indicators -->
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExampleSlidesOnly" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleSlidesOnly" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExampleSlidesOnly" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+
+    <!-- Carousel images with per-slide captions -->
+    <div class="carousel-inner">
+      <!-- Slide 1 -->
+      <div class="carousel-item active slideimg position-relative">
+        <img src="home_slide.jpg" class="d-block w-100" alt="Hospital">
+        <div class="carousel-caption-custom text-center text-dark">
+          <i class="bi bi-plus-circle" style="font-size: 2rem; color: rgb(234, 7, 22);"></i>
+          <h1 class="display-5 fw-bold">Welcome to RS LifeCare</h1>
+          <p class="lead">Your trusted partner in compassionate healthcare</p>
+        </div>
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="carousel-item slideimg position-relative">
+        <img src="expert_img.png" class="d-block w-100" alt="Medical Team">
+        <div class="carousel-caption-custom text-center text-white mt-5">
+          <h1 class="display-5 fw-bold">Expert Medical Professionals</h1>
+          <p class="lead">Dedicated to delivering personalized and quality care</p>
+        </div>
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="carousel-item slideimg position-relative">
+        <img src="slide.png" class="d-block w-100" alt="Advanced Facilities">
+        <div class="carousel-caption-custom text-center text-dark">
+          <i class="bi bi-hospital-fill" style="font-size: 2rem; color: #0d6efd;"></i>
+          <h1 class="display-5 fw-bold">State-of-the-Art Facilities</h1>
+          <p class="lead">Advanced technology for faster, safer recovery</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <!-- Image & Info Section -->
   <section class="image-info-section py-5 ">
     <div class="container">
       <div class="row align-items-center">
         <div class="col-md-6 mb-4 mb-md-0">
-          <img src="mak.jpg" alt="Hospital Team" class="img-fluid rounded shadow"  width="400" height="400" >
+          <img src="mak.jpg" alt="Hospital Team" class="img-fluid rounded shadow" width="350" height="350">
+          <h5 class="mt-2 mb-0 fw-bold text-darks" style="margin-left:140px; margin-top: 10px;">Dr.Mak</h5>
+        <small class="text-muted" style="margin-left:80px";> Cardiology Specialist (USA)</small>
         </div>
         <div class="col-md-6">
           <h2 class="mb-3">Trusted Care from Certified Expert</h2>
@@ -149,8 +197,9 @@
     </div>
     <hr class="bg-light" />
     <div class="text-center">
-      <small>&copy; 2025 HMS Care. All Rights Reserved.</small>
-    </div>
+  <small>Created by <strong>Sumit</strong> and <strong>Rohit</strong></small><br>
+  <small>&copy; 2025 Rs LifeCare. All Rights Reserved.</small>
+</div>
   </div>
 </footer>
 

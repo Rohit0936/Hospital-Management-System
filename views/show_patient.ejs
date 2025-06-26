@@ -231,6 +231,8 @@
 
       .table th, .table td {
         padding: 6px;
+        /* border: 2px solid black;
+        width: 500px; */
         font-size: 11px;
       }
 
@@ -294,7 +296,9 @@
               <th>Nurse</th>
               <th>Doctor</th>
               <th>Status</th>
-              <th>Actions</th>
+              <th>Edit</th>
+              <th>Delete</th>
+              <th>Bill</th>
             </tr>
           </thead>
           <tbody>
@@ -331,27 +335,45 @@
                 <td><%=item.room_no%>,<%=item.roomtype%></td>
                 <td><%=item.nname%></td>
                 <td><%=item.dname%></td>
-                <td><%=item.status%></td>
+                <%
+                   if(item.status=='Admit')
+                   {
+                %>
+                    <td style="color: #28a745;"><%=item.status%></td>
+                <%
+                   }
+                   else
+                   {
+                %>
+                <td style="color: gray;"><%=item.status%></td>
+                <%
+                   }
+                %>
+                
                 <td>
                   <a href="/edit_patient?id=<%=item.pid%>" class="btn btn-outline-primary btn-sm"><i class="fas fa-pen me-1"></i></a>
+                </td>
+                <td>
                   <a href="/delete_patient?id=<%=item.pid%>" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash me-1"></i></a>
+                </td>
                   <%
                     if(item.bill==="false")
                     {
                   %>
-                  <a href="" class="btn btn-sm" style="background-color: gray; color: white;"><i class="fas fa-trash me-1"></i>Bill</a>
+                  <td>
+                  <a href="" class="btn btn-sm" style="background-color: gray; color: white; display: inline-flex;"><i class="fas fa-trash me-1"></i>Bill</a>
+                  </td>
                   <%
                     }
                     else
                     {
                   %>
-                  <a href="/bill?id=<%=item.pid%>" class="btn btn-sm" style="background-color:#28a745; color: white;"><i class="fas fa-trash me-1"></i>Bill</a>
-                  <%
+                  <td>
+                    <a href="/bill?id=<%=item.pid%>" class="btn btn-sm" style="background-color:#28a745; color: white;"><i class="fas fa-trash me-1"></i>Bill</a>
+                  </td>
+                    <%
                     }
                   %>
-
-                  
-                </td>
                </tr>
             <%
                   })

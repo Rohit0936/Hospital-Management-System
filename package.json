@@ -14,5 +14,22 @@
     "mysql2": "^3.14.1",
     "parser": "^0.1.4",
     "session": "^0.1.0"
-  }
+  },
+  "name": "hospital-management",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rohit0936/Hospital-Management-System.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rohit0936/Hospital-Management-System/issues"
+  },
+  "homepage": "https://github.com/Rohit0936/Hospital-Management-System#readme"
 }
