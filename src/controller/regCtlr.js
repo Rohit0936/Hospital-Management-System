@@ -1,15 +1,19 @@
 
 let model = require("../model/regmodel.js");
+let jsonwebtoken=require("jsonwebtoken");
 let nurse=require("../services/regnurse_service.js");
  let Doctor = require("../services/reg_doc_services.js");
  let reception=require("../services/reg_reception.js");
  let login=require("../services/login_service.js");
  let room=require("../services/room.js");
 let patient=require("../services/patient_service.js");
+let admin=require("../services/reg_admin.js");
 
+let securitykey=process.env.JWT_SECURITYKEY;
+let time=process.env.JWT_EXPIERESIN;
 exports.logout=(req,res)=>{
 
-   // console.log("logout");
+    //console.log("logout");
     res.clearCookie("xyz");
     res.render("home.ejs");
 }
@@ -17,32 +21,38 @@ exports.home = (req, res) => {
     
    
    try{
-    let temp=req.cookies.xyz;
-   // let rec=req.cookies.rec;
-    //console.log(req.cookie.xyz);
-    if(typeof(temp)==="undefined")
+    let token=req.cookies.xyz;
+    if(typeof(token)==="undefined")
     {
         res.render("home.ejs");
-       
     }
     else{
         
-        let role=model.show(temp);
-        role.then((r)=>{
-            let arr=[req.session.name,req.session.image,req.session.uid];
-            if(r.role==="Reception")
+       jsonwebtoken.verify(token,securitykey,(err,result)=>{
+        req.user=result;
+         //sconsole.log(result);
+         let role=model.show(result.uid);
+        
+         role.then((r)=>{
+             
+            if(r.role==='Admin')
             {
-                res.render("rec_dashbord.ejs",{data:arr});
+                res.render("admindashbord.ejs",{data:r.data});
             }
-            else{
-               
-                res.render("doc_dashboard.ejs",{data:arr});
+            else if(r.role==='Doctor')
+            {
+                res.render("doc_dashboard.ejs",{data:{name:req.user.name,image:req.user.image}});
             }
-
-        }).catch((err)=>{
-            res.redirect("/login")
-        })
-       
+            else
+            {
+                
+                res.render("rec_dashbord.ejs",{data:[req.user.name,req.user.image]})
+            }
+         }).catch((err)=>{
+            
+             res.redirect("/login")
+         })
+       })
     }
   
    }
@@ -58,118 +68,164 @@ exports.admindashbord=(req,res)=>{
     res.render("admindashbord.ejs");
 }
 
-// exports.home=(req,res)=>{
-//     res.render("home.ejs");
-// };
 
  exports.loginuser = async (req, res) => {
 
      let { username, password, department } = req.body;
      const lo=new login();
 
-      
-     //console.log(flag);
      try{
        let result = await lo.loginuser(username, password, department);
-       // console.log(result);
-        if(typeof(result)!="undefined" &&  result.length!=0 && department=="admin")
+      
+        if(typeof(result)!="undefined" &&  result.length!=0 && department=="Admin")
         {
+            
+          let token=jsonwebtoken.sign({
+                aid:result.aid,
+                uid:result.uid,
+                name:result.Name,
+                image:result.admin_Image            
+          },securitykey,{expiresIn:time});
+    
+          res.cookie("xyz",token,{
 
-            res.render("admindashbord.ejs");
+            maxAge:24*60*60*1000,
+            httpOnly:true
+          });
+          
+          admindata=result;
+            res.render("admindashbord.ejs",{data:result});
         }
         else if(typeof(result)!="undefined" &&  result.length!=0 && department=="Reception")
         {
            
-         //console.log(result);
-            req.session.uid=result.uid;
-            req.session.tid=result.rid;//reception id;
-            req.session.name=result.name;
-            req.session.image=result.img;
-            res.cookie("xyz",req.session.uid,{
+            let token=jsonwebtoken.sign({
+                uid:result.uid,
+                aid:result.aid,
+                name:result.reception_name,
+                image:result.rec_Image
+            },securitykey,{expiresIn:time});
+
+            res.cookie("xyz",token,{
 
                 maxAge: 24*60*60*1000,
                 httpOnly:true
              });
-            //console.log(result);
-            //req.cookie('xyz',result.name.did)
+            
 
-            let arr=[req.session.name,req.session.image,req.session.uid];
-            res.render("rec_dashbord.ejs",{data:arr});
+            res.render("rec_dashbord.ejs",{data:[result.reception_name,result.rec_Image]});
         }
-        else if(typeof(result)!="undefined" &&  result.length!=0 && department=="doctor")
-            {
-                //console.log(result);
-                 req.session.uid=result.name.uid;
-                 req.session.tid=result.name.did;// doctor id;
-                 req.session.name=result.name.doctor_name;
-                 req.session.image=result.name.doctor_Image;
-                 //console.log(req.session.uid);
+        else if(typeof(result)!="undefined" &&  result.length!=0 && department=="Doctor")
+            {     
+                let token=jsonwebtoken.sign({
 
-                 res.cookie("xyz",req.session.uid,{
+                    uid:result.uid,
+                    aid:result.aid,
+                    name:result.doctor_name,
+                    image:result.Doctor_Image
+                },securitykey,{expiresIn:time});
 
-                    maxAge: 24*60*601000,
+                 res.cookie("xyz",token,{
+
+                    maxAge: 24*60*60*1000,
                     httpOnly:true
                  });
-                 let arr=[req.session.name,req.session.image];
-                res.render("doc_dashboard.ejs",{data:arr});
+
+                res.render("doc_dashboard.ejs",{data:{name:result.doctor_name,image:result.Doctor_Image}});
             }
         else{
             res.render("login.ejs", { msg: "Invalid Username and Password" });
         }
-
      }
      catch(err)
      {
         console.log(err);
         res.render("login.ejs", { msg: "Invalid Username and Password" });
      }
-    
  }
+
 
  exports.login=(req,res)=>{
     res.render("login.ejs",{msg:""});
 }
 
-exports.reg_doc=(req,res)=>{
-    res.render("reg_doc.ejs",{msg:""});
+exports.aboutpage=(req,res)=>{
+    res.render("aboutpage.ejs");
 }
 
-// exports.show_doc=(req,res)=>{
-//     let result=model.showDoctor()
-//     result.then((r)=>{
-//        res.render("show_doc.ejs",{data:r});
-//     }).catch((err)=>{
-        
-//        res.send("Something wrong");
-//     });
-// }
+//Admin Registraction form
+exports.adminrege=(req,res)=>{
+     res.render("adminlogin.ejs",{msg:""});
+}
+
+exports.addadmin= async (req,res)=>{
+    let image=req.file.path;
+    image = "./upload/" + image.substring(14);
+    let {name,email,contact,password}=req.body;
+
+    let Admin=new admin();
+    try{
+       await  Admin.addadmin(name,contact,email,image,password);
+
+       res.redirect("/login");
+    }
+    catch(err)
+    {
+        //console.log(err);
+        res.render("adminlogin.ejs",{msg:"This user name already present"})
+    }
+   
+   //  console.log(name,email,contact,username,image,password);
+}
+
+exports.reg_doc=(req,res)=>{
+    let token=req.cookies.xyz;
+    
+      jsonwebtoken.verify(token,securitykey,(err,result)=>{
+          res.render("reg_doc.ejs",{msg:"",data:{Name:result.name,admin_Image:result.image}});
+      })
+        // res.render("reg_doc.ejs",{msg:"",data:admindata});
+}
 
 exports.regDoctor = async (req, res) => {
-    const u = new Doctor();
-    let image = req.file.path;
-    image = "./upload/" + image.substring(14);
 
-    let { name, email, Specialization, contact, experience, role, password } = req.body;
+    
+    let aid;
+let token=req.cookies.xyz;
+    jsonwebtoken.verify(token,securitykey,(err,result)=>{
+          //console.log(result);
+          aid=result;
+    });
+    //console.log(aid);
+     const u = new Doctor();
+     let image = req.file.path;
+     image = "./upload/" + image.substring(14);
 
-    try {
-        await u.regDoctor(name, email, Specialization, contact, experience, image, role, password);
+     let { name, email, Specialization, contact, experience, password } = req.body;
+
+     try {
+         await u.regDoctor(name, email, Specialization, contact, experience, image, password,aid.aid);
        
-        res.render("reg_doc.ejs", { msg: "Doctor registration Successfully" });
-    } catch (err) {
-        console.log(err);
-        res.render("reg_doc.ejs", { msg: "This user name already present" });
-    }
+        res.redirect("/showdoctor?status=n");
+     } catch (err) {
+         console.log(err);
+         res.render("reg_doc.ejs", { msg: "This user name already present",data:{name:aid.name,admin_Image:aid.image}});
+     }
 };
 
-
  exports.showDoctor=(req,res)=>{
-   
+
     let show=req.query.status.trim();
-    //console.log(show);
-    let flag=model.showDoctor(show);
+    let aid;
+let token=req.cookies.xyz;
+    jsonwebtoken.verify(token,securitykey,(err,result)=>{
+          //console.log(result);
+          aid=result;
+    });
+    let flag=model.showDoctor(show,aid.aid);
     flag.then((r)=>{
        // console.log(r);
-        res.render("show_doc.ejs",{result:r});
+        res.render("show_doc.ejs",{result:r,data:{name:aid.name,admin_Image:aid.image}});
     }).catch((err)=>{
         console.log(err);
         res.send("Something went wrong");
@@ -177,35 +233,43 @@ exports.regDoctor = async (req, res) => {
  };
 
  let uid;
- exports.updateDocotr=(req,res)=>{
 
+ exports.updateDocotr=(req,res)=>{
+ let aid;
+let token=req.cookies.xyz;
+    jsonwebtoken.verify(token,securitykey,(err,result)=>{
+          //console.log(result);
+          aid=result;
+    });
     let id=req.query.did;
-    uid=id;
+    
     let flag=model.updatdoc(id)
     flag.then((u)=>{
+        uid=[id,u];
           // console.log("hello");
-        res.render("updatedoctor.ejs",{data:u,msg:""});
+        res.render("updatedoctor.ejs",{data1:u,msg:"",data:{name:aid.name,admin_Image:aid.image}});
     });
     
  };
 
  exports.finalupdatedoc=(req,res)=>{
     let {name,email,specialization,contact,experience}=req.body;
- 
-    let flag=model.finalupdatedoc(name,email,specialization,contact,experience,uid);
+ let aid;
+let token=req.cookies.xyz;
+    jsonwebtoken.verify(token,securitykey,(err,result)=>{
+          //console.log(result);
+          aid=result;
+    });
+
+    let flag=model.finalupdatedoc(name,email,specialization,contact,experience,uid[0]);
     flag.then((r)=>{
-        if(r)
-            {
+        
                 
                  res.redirect("/showdoctor?status=n");
                 //res.render("updatedoctor.ejs",{data:"",msg:"Update successfully"});
-            }
-            else{
-                res.render("updatedoctor.ejs",{data:"",msg:"Update failed"});
-            }
 
     }).catch((err)=>{
-        res.send("Something Error");
+        res.render("updatedoctor.ejs",{data1:uid[1],msg:"Update failed",data:{name:aid.name,admin_Image:aid.image}});
     })
  }
  
@@ -214,7 +278,7 @@ exports.regDoctor = async (req, res) => {
     let id=req.query.uid;
     let flag=model.deletedoc(id);
     flag.then((r)=>{
-        res.render("show_doc.ejs",{result:r});
+         res.redirect("/showdoctor?status=n");
     }).catch((err)=>{
         res.send("Something Wrong")
     })
@@ -222,11 +286,17 @@ exports.regDoctor = async (req, res) => {
  };
 
  exports.searchdoc=(req,res)=>{
-
+   
      let na=req.query.na.trim();
-    
-     let data=model.searchdoc(na);
+     let token=req.cookies.xyz;
+    let aid;
+
+    jsonwebtoken.verify(token,securitykey,(err,result)=>{
+        aid=result.aid;
+    })
+     let data=model.searchdoc(na,aid);
     data.then((r)=>{
+        //console.log(r);
         res.json(r);
     }).catch((err)=>{
         res.send("Something went wrong");
@@ -234,11 +304,23 @@ exports.regDoctor = async (req, res) => {
  }
 
  exports.reg_rec=(req,res)=>{
-    res.render("reg_rec.ejs",{msg:""});
+
+     let token=req.cookies.xyz;
+    
+      jsonwebtoken.verify(token,securitykey,(err,result)=>{
+           res.render("reg_rec.ejs",{msg:"",data:{Name:result.name,admin_Image:result.image}});
+      })
+   
 }
 
 exports.regrecep= async (req,res)=>{
 
+    let token=req.cookies.xyz;
+    let aid;
+
+    jsonwebtoken.verify(token,securitykey,(err,result)=>{
+        aid=result;
+    })
     let rec=new reception();
 
     let {name,email,contact,password}=req.body;
@@ -249,38 +331,49 @@ exports.regrecep= async (req,res)=>{
     
     try
         {
-        await rec.regReception(name,email,contact,password,image);
-         res.render("reg_rec.ejs",{msg:"Receptionists registration Successfully"});
+        await rec.regReception(name,email,contact,password,image,aid.aid);
+         res.redirect("/show_rec");
         }
         catch(err){
             console.log(err);
-         res.render("reg_rec.ejs",{msg:"This user name already present"});
+         res.render("reg_rec.ejs",{msg:"This user name already present",data:{name:aid.name,admin_Image:aid.image}});
         }
 }
 exports.show_rec=(req,res)=>{
 
-    let flag=model.showrec();
+    let token=req.cookies.xyz;
+    let aid;
+    jsonwebtoken.verify(token,securitykey,(err,result)=>{
+        aid=result;
+    });
+    let flag=model.showrec(aid.aid);
     flag.then((r)=>{
-        res.render("show_rec.ejs",{result:r});
+        res.render("show_rec.ejs",{result:r,data:{name:aid.name,admin_Image:aid.image}});
     }).catch((err)=>{
         res.send("<h1>Something went wrong</h1>")
     })
 }
 
+
 let rid;
 exports.recepudate=(req,res)=>{
 
     let id=req.query.rid.trim();
-    rid=id;
 
-    let flag=model.showrec();
+
+    let token=req.cookies.xyz;
+    let aid;
+    jsonwebtoken.verify(token,securitykey,(err,result)=>{
+        aid=result;
+    });
+    let flag=model.showrec(aid.aid);
     flag.then((r)=>{
         r.forEach((item,index)=>{
 
             if(parseInt(item.rid)==id)
             {
-               
-                res.render("recepupdate.ejs",{data:item,msg:""});
+               rid=[id,item];
+                res.render("recepupdate.ejs",{data1:item,msg:"",data:{name:aid.name,admin_Image:aid.image}});
             }
         })
        
@@ -294,13 +387,18 @@ exports.recepudate=(req,res)=>{
 exports.recefinalpudate=(req,res)=>{
 
    let {name,email,contact}=req.body;
+let token=req.cookies.xyz;
+    let aid;
+    jsonwebtoken.verify(token,securitykey,(err,result)=>{
+        aid=result;
+    });
 
- let flag=model.recepudate(name,email,contact,rid);
+ let flag=model.recepudate(name,email,contact,rid[0]);
  flag.then((f)=>{
     res.redirect("/show_rec");
     // res.render("recepupdate.ejs",{data:"",msg:"Update Successfully"});
  }).catch((err)=>{
-     res.send("<h1>Something went wrong</h1>")
+    res.render("recepupdate.ejs",{data1:rid[1],msg:"Update failed",data:{name:aid.name,admin_Image:aid.image}});
  })
 }
 
@@ -319,8 +417,12 @@ exports.recepdelete=(req,res)=>{
 exports.searchrecep=(req,res)=>{
 
     let na=req.query.na.trim();
-
-    let flag=model.searchrecep(na);
+    let token=req.cookies.xyz;
+    let aid;
+    jsonwebtoken.verify(token,securitykey,(err,result)=>{
+       aid=result.aid;
+    });
+    let flag=model.searchrecep(na,aid);
     flag.then((r)=>{
       res.json(r);  
     }).catch((err)=>{
@@ -332,67 +434,51 @@ exports.searchrecep=(req,res)=>{
 
 exports.reg_nurse=(req,res)=>{
 
-    let arr=[req.session.name,req.session.image,req.session.uid];
-   
-    req.session.uid=arr[2];      
-    req.session.name=arr[0];
-    req.session.image=arr[1];
-    if(typeof(arr[0])=="undefined")
-        {
-            return res.send("<h1>Some thing went wrong</h1>")
-        }
+     let token=req.cookies.xyz;
 
-  res.render("reg_nurse.ejs",{data:arr,msg:""});
+     jsonwebtoken.verify(token,securitykey,(err,result)=>{
+        res.render("reg_nurse.ejs",{data:[result.name,result.image],msg:""});
+     })
+  
 }
 
 exports.insert_nurse= async (req,res)=>{
 
+    let rid;
+    let token=req.cookies.xyz;
+    jsonwebtoken.verify(token,securitykey,(err,result)=>{
+      rid=result;
+    });
     let {name,email,contact,nursedata}=req.body;
-    console.log(nursedata);
     let image=req.file.path;
     image=image.substring(14,image.length);
     image="./upload/"+image;
    
     let n=new nurse();
-    let arr=[req.session.name,req.session.image,req.session.uid];
-   
-    req.session.uid=arr[2];      
-    req.session.name=arr[0];
-    req.session.image=arr[1];
 
-    if(typeof(arr[0])=="undefined")
-        {
-            return res.send("<h1>Some thing went wrong</h1>")
-        }
-    //console.log(name+" "+email+" "+contact+" "+image);
     try{
-        await n.regnurse(name,email,contact,nursedata,image);
-        res.render("reg_nurse.ejs",{msg:"Registration Successfully",data:arr})
+        await n.regnurse(name,email,contact,nursedata,image,rid.aid);
+        res.redirect("/show_nurse");
     }
     catch(err)
     {
         console.log(err);
-        res.render("reg_nurse.ejs",{msg:"This email and contact already present",data:arr})
+        res.render("reg_nurse.ejs",{msg:"This email and contact already present",data:[rid.name,rid.image]})
     }
 }
 
 exports.show_nurse=(req,res)=>{
+    let rid;
+    let token=req.cookies.xyz;
+    jsonwebtoken.verify(token,securitykey,(err,result)=>{
+        rid=result;
+    })
 
-    let no=req.query.s;
-        let flag=model.show_nurse(no);
-       let arr=[req.session.name,req.session.image,req.session.uid];
-   
-    req.session.uid=arr[2];      
-    req.session.name=arr[0];
-    req.session.image=arr[1];
+      let no=req.query.s;
+    let flag=model.show_nurse(no,rid.aid);
 
-        if(typeof(arr[0])=="undefined")
-            {
-                return res.send("<h1>Some thing went wrong</h1>")
-            }
-       // console.log(arr);
          flag.then((r)=>{
-              res.render("show_nurse.ejs",{data:arr,result:r});
+              res.render("show_nurse.ejs",{data:[rid.name,rid.image],result:r});
          }).catch((err)=>{
             console.log(err);
          });
@@ -401,8 +487,12 @@ exports.show_nurse=(req,res)=>{
 exports.searchnurse=(req,res)=>{
 
     let str=req.query.str;
-    
-   let flag=model.searchnurse(str);
+    let rid;
+    let token=req.cookies.xyz;
+    jsonwebtoken.verify(token,securitykey,(err,result)=>{
+      rid=result;
+    })
+   let flag=model.searchnurse(str,rid.aid);
    flag.then((r)=>{
     // console.log(r);
         res.json(r);
@@ -415,20 +505,15 @@ let nid;
 exports.updatenurse=(req,res)=>{
 
     let id=req.query.nid;
-   //  nid=id;
     let result=model.updatenurse(id);
-    let arr=[req.session.name,req.session.image,req.session.uid];
-   
-    req.session.uid=arr[2];      
-    req.session.name=arr[0];
-    req.session.image=arr[1];
-    if(typeof(arr[0])=="undefined")
-        {
-            return res.send("<h1>Some thing went wrong</h1>")
-        }
+    let rid;
+    let token=req.cookies.xyz;
+    jsonwebtoken.verify(token,securitykey,(err,result)=>{
+       rid=result;
+    });
     result.then((r)=>{
          nid=r.nid;
-        res.render("nurse_update.ejs",{item:r,msg:"",data:arr});
+        res.render("nurse_update.ejs",{item:r,msg:"",data:[rid.name,rid.image]});
     }).catch((err)=>{
         console.log(err);
         res.send("<h1>Something went wrong</h1>")
@@ -437,28 +522,22 @@ exports.updatenurse=(req,res)=>{
 
 exports.finalnurseupdate=(req,res)=>{
 
-   
-    let {name,email,contact,nurse_shift}=req.body;
-  //let name1=req.body.name;
+   let rid;
+   let token=req.cookies.xyz;
 
-  //  console.log(nurse_shift);
+   jsonwebtoken.verify(token,securitykey,(err,result)=>{
+      rid=result;
+   });
+
+    let {name,email,contact,nurse_shift}=req.body;
     
        let flag= model.finalnurseupdate(name,email,contact,nurse_shift,nid);
-       let arr=[req.session.name,req.session.image,req.session.uid];
-   
-    req.session.uid=arr[2];      
-    req.session.name=arr[0];
-    req.session.image=arr[1];
-       if(typeof(arr[0])=="undefined")
-        {
-            return res.send("<h1>Some thing went wrong</h1>")
-        }
-      // console.log(arr);
+       
        flag.then((r)=>{
         res.redirect("/show_nurse");
        }).catch((err)=>{
         console.log(err);
-        res.render("nurse_update",{item:nid,data:arr,msg:"update failed"})
+        res.render("nurse_update",{item:nid,data:[rid.name,rid.image],msg:"update failed"})
        })
 }
 
@@ -470,46 +549,38 @@ exports.deleteNurse=(req,res)=>{
     flag.then((r)=>{
         res.redirect("/show_nurse");
     }).catch((err)=>{
+        console.log(err);
         res.send("<h1>Something went wrong</h1>")
     })
 }
 
 exports.add_room=(req,res)=>{
-    let arr=[req.session.name,req.session.image,req.session.uid];
    
-    req.session.uid=arr[2];      
-    req.session.name=arr[0];
-    req.session.image=arr[1];
-    if(typeof(arr[0])=="undefined")
-        {
-            return res.send("<h1>Some thing went wrong</h1>")
-        }
-    res.render("add_room.ejs",{msg:"",data:arr});
+    let token=req.cookies.xyz;
+    jsonwebtoken.verify(token,securitykey,(err,result)=>{
+        res.render("add_room.ejs",{msg:"",data:[result.name,result.image]});
+    })
+    
 }
 
 exports.addromm= async (req,res)=>{
 
     let {room_type,room_charges,id}=req.body;
-    let arr=[req.session.name,req.session.image,req.session.uid];
-   
-    req.session.uid=arr[2];      
-    req.session.name=arr[0];
-    req.session.image=arr[1];
-    if(typeof(arr[0])=="undefined")
-        {
-            return res.send("<h1>Some thing went wrong</h1>")
-        }
+      
+    let rid;
+    let token=req.cookies.xyz;
+    jsonwebtoken.verify(token,securitykey,(err,result)=>{
+        rid=result;
+    })
     try{
         let ro=new room();
-      //console.log("hello");
-      await ro.addromm(room_type,room_charges,id);
+      await ro.addromm(room_type,room_charges,id,rid.aid);
 
-        res.render("add_room.ejs",{data:arr,msg:"Room Add Successfully"});
+       res.redirect("/show_room");
     }
     catch(err)
     {  console.log(err);
-        res.render("add_room",{data:arr,msg:"Room Id already present"})
-        //res.send("<h1>Something went wrong</h1>")
+        res.render("add_room",{data:[rid.name,rid.image],msg:"Room Id already present"})
     }
 }
 
@@ -517,18 +588,14 @@ exports.show_room=(req,res)=>{
 
     let s=req.query.s;
 
-    let arr=[req.session.name,req.session.image,req.session.uid];
-   
-    req.session.uid=arr[2];      
-    req.session.name=arr[0];
-    req.session.image=arr[1];
-    if(typeof(arr[0])=="undefined")
-        {
-            return res.send("<h1>Some thing went wrong</h1>")
-        }
-       let flag=model.show_room(s);
+   let rid;
+   let token=req.cookies.xyz;
+   jsonwebtoken.verify(token,securitykey,(err,result)=>{
+     rid=result;
+   })
+       let flag=model.show_room(s,rid.aid);
        flag.then((r)=>{
-         res.render("show_room.ejs",{item:r,data:arr});
+         res.render("show_room.ejs",{item:r,data:[rid.name,rid.image]});
        }).catch((err)=>{
         console.log(err);
         res.send("<h1>Something went wrong</h1>")
@@ -538,37 +605,33 @@ exports.show_room=(req,res)=>{
 
 exports.searchroom=(req,res)=>{
 
-    let str=req.query.str;
-   // console.log(str);
-    let flag=model.searchroom(str);
+let token=req.cookies.xyz;
+
+jsonwebtoken.verify(token,securitykey,(err,result)=>{
+ let str=req.query.str;
+    let flag=model.searchroom(str,result.aid);
     flag.then((r)=>{
-       //console.log(r);
         res.json(r);
     }).catch((err)=>{
         res.send("<h1>Something went wrong</h1>")
     })
+})
 }
 
 let roomtemp;
 exports.updateroom=(req,res)=>{
     let rid=req.query.rid;
-    
+    let temp;
+    let token=req.cookies.xyz;
+    jsonwebtoken.verify(token,securitykey,(err,result)=>{
+        temp=result;
+    })
     let flag=model.updateroom(rid);
     uid=rid;
-    let arr=[req.session.name,req.session.image,req.session.uid];
-   
-    req.session.uid=arr[2];      
-    req.session.name=arr[0];
-    req.session.image=arr[1];
-    
-    if(typeof(arr[0])=="undefined")
-        {
-            return res.send("<h1>Some thing went wrong</h1>")
-        }
     flag.then((r)=>{
        // console.log(r);
        roomtemp=r;
-        res.render("room_update.ejs",{item:r,msg:"",data:arr});
+        res.render("room_update.ejs",{item:r,msg:"",data:[temp.name,temp.image]});
     }).catch((err)=>{
         res.send("<h1>Something went wrong</h1>");
     })
@@ -579,23 +642,19 @@ exports.finalupdateroom=(req,res)=>{
 
    
     let {room_type,room_charges,id}=req.body;
-    let arr=[req.session.name,req.session.image,req.session.uid];
-   
-    req.session.uid=arr[2];      
-    req.session.name=arr[0];
-    req.session.image=arr[1];
-    if(typeof(arr[0])=="undefined")
-        {
-            return res.send("<h1>Some thing went wrong</h1>")
-        }
-
+    let rid;
+    let token=req.cookies.xyz;
+    jsonwebtoken.verify(token,securitykey,(err,result)=>{
+        rid=result;
+    })
     
-       let flag=model.finalupdateroom(room_type,room_charges,id,uid);
-        flag.then(()=>{
+       let flag=model.finalupdateroom(room_type,room_charges,id,uid,rid.aid);
+       
+        flag.then((r)=>{
             res.redirect("/show_room");
         }).catch((err)=>
-    {console.log("hello");
-        res.render("room_update.ejs",{item:roomtemp,data:arr,msg:"Update Failed"});
+    {
+        res.render("room_update.ejs",{item:roomtemp,data:[rid.name,rid.image],msg:"Room already present"});
     });
 }
 
@@ -615,89 +674,63 @@ exports.deleteroom=(req,res)=>{
 let flag;
 exports.reg_patient= async (req,res)=>{
 
-   
-    let arr=[req.session.name,req.session.image,req.session.uid];
-   
-    req.session.uid=arr[2];      
-    req.session.name=arr[0];
-    req.session.image=arr[1];
-   // console.log(arr[0]);
-    if(typeof(arr[0])=="undefined")
-    {
-        return res.send("<h1>Some thing went wrong</h1>")
-    }
+   let rid;
+   let token=req.cookies.xyz;
+   jsonwebtoken.verify(token,securitykey,(err,result)=>{
+      rid=result;
+   });
+     
    try{
-     flag= await model.getallrnd();
-   res.render("reg_patient.ejs",{nurse:flag.nurse,room:flag.room,doctor:flag.doctor,msg:"",data:arr})
+     flag= await model.getallrnd(rid.aid);
+   res.render("reg_patient.ejs",{nurse:flag.nurse,room:flag.room,doctor:flag.doctor,msg:"",data:[rid.name,rid.image]})
    }
    catch(err)
    {
     res.send("<h1>Something went wrong</h1>")
    }
-    // flag.then((r)=>{
-
-        
-    // }).catch((err)=>{
-    //     alert("this contact already present")
-    //     res.sen("/reg_patient");
-
-    // })
-   // res.render("reg_patient.ejs",{room:"",nurse:"",doctor:"",msg:""});
 }
 
 exports.addpatient= async (req,res)=>{
 
-    //let {patientage}=req.body;
-   // console.log(patientage);
+    let rid;
+    let token=req.cookies.xyz;
+    jsonwebtoken.verify(token,securitykey,(err,result)=>{
+        rid=result;
+    })
     let {patientname,patientage,gender,contact_number,medical_issue,room,nurse,doctor}=req.body;
     let date=new Date();
-    //console.log(date.getDate()+" "+(parseInt(date.getMonth())+1)+" "+date.getFullYear());
+   
     date=date.getFullYear()+"-"+(parseInt(date.getMonth())+1)+"-"+date.getDate();
 
 let p=new patient();
     
-let arr=[req.session.name,req.session.image,req.session.uid];
-   
-    req.session.uid=arr[2];      
-    req.session.name=arr[0];
-    req.session.image=arr[1];
-if(typeof(arr[0])=="undefined")
-    {
-        return res.redirect("/");
-    }
     try{
-       // res.render("reg_patient.ejs",{});
-     await p.addpatient(patientname,patientage,gender,contact_number,medical_issue,date,room,nurse,doctor);
-        res.redirect("/show_patient");
+  
+     await p.addpatient(patientname,patientage,gender,contact_number,medical_issue,date,room,nurse,doctor,rid.aid);
+        res.redirect("/show_patient?s=n");
     }
     catch(err)
     {  console.log(err);
-        //res.render("reg_patient.ejs",{msg:"Contact Already present"});
-        //flag= await model.getallrnd();
-        res.render("reg_patient.ejs",{nurse:flag.nurse,room:flag.room,doctor:flag.doctor,msg:"Contact Already Present",data:arr});
+        res.render("reg_patient.ejs",{nurse:flag.nurse,room:flag.room,doctor:flag.doctor,msg:"Contact Already Present",data:[rid.name,rid.image]});
     }
 }
 
 exports.show_patient=(req,res)=>{
 
-    let arr=[req.session.name,req.session.image,req.session.uid];
-   
-    req.session.uid=arr[2];      
-    req.session.name=arr[0];
-    req.session.image=arr[1];
-    if(typeof(arr[0])=="undefined")
-        {
-            return res.redirect("/");
-        }
-        let flag=model.show_patient()
+   let rid;
+   let s=req.query.s;
+   let token=req.cookies.xyz;
+   jsonwebtoken.verify(token,securitykey,(err,result)=>{
+    rid=result;
+   })
+
+        let flag=model.show_patient(rid.aid,s)
          flag.then((r)=>{
-          //console.log(typeof (r[0].discharge));
-            res.render("show_patient.ejs",{item:r,data:arr});
+            res.render("show_patient.ejs",{item:r,data:[rid.name,rid.image]});
          }).catch((err)=>{
             console.log(err);
-            res.render("show_patient.ejs",{item:[],data:arr});
+            res.send("<h1>Something went wrong</h1>")
          })
-      //  res.render("show_patient.ejs");
 }
 
 
@@ -705,30 +738,25 @@ exports.updatepatient=(req,res)=>{
 
      let id=req.query.id;
      uid=id;
-     let arr=[req.session.name,req.session.image,req.session.uid];
-   
-     req.session.uid=arr[2];      
-     req.session.name=arr[0];
-     req.session.image=arr[1];
-     if(typeof(arr[0])=="undefined")
-        {
-            return res.send("<h1>Some thing went wrong</h1>")
-        }
-     let result=model.updatepatient(id);
+    
+     let rid;
+     let token=req.cookies.xyz;
+     jsonwebtoken.verify(token,securitykey,(err,result)=>{
+         rid=result;
+     })
+     let result=model.updatepatient(id,rid.aid);
      result.then((r)=>{
-       //console.log(r);
-       res.render("update_patient.ejs",{nurse:r.nurse,room:r.room,doctor:r.doctor,pen:r.p,msg:"",data:arr})
+       res.render("update_patient.ejs",{nurse:r.nurse,room:r.room,doctor:r.doctor,pen:r.p,msg:"",data:[rid.name,rid.image]})
      }).catch((err)=>{
         console.log(err);
         res.send("<h1>Something went wrong</h1>");
      })
-    // console.log(id);
 }
 
 exports.finalupdatepatient=(req,res)=>
 {
     let {patientname,patientage,gender,contact_number,medical_issue,room,nurse,doctor}=req.body;
-    console.log(uid);
+   // console.log(uid);
     try{
         model.finalupdatepatient(patientname,patientage,gender,contact_number,medical_issue,room,nurse,doctor,uid);
         res.redirect("/show_patient");
@@ -736,8 +764,7 @@ exports.finalupdatepatient=(req,res)=>
     catch(err)
     {
         res.send("<h1>Something went wrong</h1>")
-    }
-     //console.log(patientname,patientage,gender,contact_number,medical_issue,room,nurse,doctor);   
+    } 
 }
 
 exports.deletepatient=(req,res)=>{
@@ -755,24 +782,16 @@ exports.deletepatient=(req,res)=>{
 
 exports.showdocpatient=(req,res)=>{
 
-        let uid=req.session.tid;
-        //console.log(id);
-        let arr=[req.session.name,req.session.image,req.session.uid];
-   
-    req.session.uid=arr[2];      
-    req.session.name=arr[0];
-    req.session.image=arr[1];
-        if(typeof(arr[0])=="undefined")
-            {
-                return res.send("<h1>Some thing went wrong</h1>")
-            }
-        let flag=model.showdocpatient(uid);
-
+        let token=req.cookies.xyz;
+        let uid;
+         jsonwebtoken.verify(token,securitykey,(err,result)=>{
+           // console.log(result);
+            uid=result;
+         });
+     let no=req.query.s;
+        let flag=model.showdocpatient(no,uid.uid,uid.aid);
         flag.then((r)=>{
-                //console.log(r);
-                  //console.log(r);
-                    res.render("showdoc_patient.ejs",{data:arr,result:r});
-               
+            res.render("showdoc_patient.ejs",{data:{name:uid.name,image:uid.image},result:r});
         }).catch((err)=>{
             console.log(err);
             res.send("<h1>Something went wrong</h1>");
@@ -811,8 +830,6 @@ exports.addmedicine= async(req,res)=>{
 
 exports.prescription=(req,res)=>{
     let pid=req.query.pid;
-   // let {medicine,qty}=req.body;
-    //console.log(pid);
 
     let flag=model.prescription(pid);
     flag.then((r)=>{
@@ -823,11 +840,8 @@ exports.prescription=(req,res)=>{
         res.send("<h>Something went wrong</h");
     })
 
-    //res.render("Prescription.ejs");
 }
 
-
-// update patient status 
 exports.updatepatientstatus=(req,res)=>{
 
     try{
@@ -841,27 +855,27 @@ exports.updatepatientstatus=(req,res)=>{
     }
 }
 
-// bill
-
 exports.bill=(req,res)=>{
 
-   // console.log(req.query.id);
     let flag=model.bill(req.query.id);
      flag.then((r)=>{
-        //  console.log(r)
           res.render("bill.ejs",{bill:r.b,medi:r.m});
      }).catch((err)=>{
 
         res.send("<h1>Something went wrong</h1>");
      });
-   // res.render("bill.ejs");
 }
 
 exports.submitbill=async(req,res)=>{
-//console.log(medicine);
 
 let pid=req.query.id;
  
+  let token=req.cookies.xyz;
+  let rid;
+   
+     jsonwebtoken.verify(token,securitykey,(err,result)=>{
+        rid=result;
+     })
 
     let{room_charges,doctor_charges,nurse_charges,day}=req.body;
     let date=new Date();
@@ -870,11 +884,55 @@ let pid=req.query.id;
 
    
     try{
-         let save= await model.submitbill(pid,room_charges*day,doctor_charges,nurse_charges,date);
+         let save= await model.submitbill(pid,room_charges*day,doctor_charges,nurse_charges,date,rid.aid);
          res.redirect("/show_patient");
     }
     catch(err)
     {
         console.log(err);
     }
+}
+
+exports.searchdocpatient= async(req,res)=>{
+
+    let str=req.query.str.trim();
+    let rid;
+  
+    let token=req.cookies.xyz;
+    jsonwebtoken.verify(token,securitykey,(err,result)=>{
+        rid=result;
+    })
+
+   try{
+    let falg= await model.searchdocpatient(str,rid.aid,rid.uid);
+    res.json(falg);
+   }
+   catch(err)
+   {
+     console.log(err);
+     res.send("<h1>Something Went wrong</h1>")
+   }
+}
+
+exports.searchpatient= async(req,res)=>{
+
+       let str=req.query.str.trim();
+       let rid;
+       let token=req.cookies.xyz;
+       jsonwebtoken.verify(token,securitykey,(err,result)=>{
+        rid=result;
+       })
+       try{
+          
+            let flag= await model.searchpatient(str,rid.aid);
+            console.log(flag);
+           res.json(flag);
+       }
+       catch(err)
+       {
+        console.log(err);
+        res.send("<h1>Something Went wrong</h1>");
+       }
+
+       
 }

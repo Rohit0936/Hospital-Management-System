@@ -15,21 +15,23 @@ let storage=multer.diskStorage({
     }
 })
 
+
 let upload=multer({storage:storage});
 
 router.get("/",control.home);
-//router.get("/home",control.home);
-
+router.get("/aboutPage",control.aboutpage);
+router.get("/adminregistration",control.adminrege);
+router.post("/regadmin",upload.single("imag"),control.addadmin);
 router.get("/admindashbord",control.admindashbord);
+
 router.get("/logout",control.logout);
 router.get("/login",control.login);
 router.post("/loginuser",control.loginuser);
 
 //Doctor Control;
 router.get("/reg_doc",control.reg_doc);
-router.get("/showdoctor",control.showDoctor);
 router.post("/regdoctor",upload.single("imag"),control.regDoctor);
-//router.get("/showdoctor",control.showDoctor);
+router.get("/showdoctor",control.showDoctor);
 router.get("/updatedoctor",control.updateDocotr);
 router.post("/finalupdatedoc",upload.single("imag"),control.finalupdatedoc);
 router.get("/deletedoctor",control.deletedoc);
@@ -37,8 +39,8 @@ router.get("/searchdoc",control.searchdoc);
 
 //Reception Control;
 router.get("/reg_rec",control.reg_rec);
-router.get("/show_rec",control.show_rec);
 router.post("/regrecep",upload.single("imag"),control.regrecep);
+router.get("/show_rec",control.show_rec);
 router.get("/recepupdate",control.recepudate);
 router.post("/recepfinalupdatedoc",control.recefinalpudate);
 router.get("/recepdelete",control.recepdelete);
@@ -70,7 +72,8 @@ router.get("/searchrecep",control.searchrecep);
  router.post("/updatepatient",control.finalupdatepatient);
  router.get("/delete_patient",control.deletepatient);
  router.get("/showdocpatient",control.showdocpatient);
-
+ router.get("/serachdocpatient",control.searchdocpatient);
+ router.get("/searchpatient",control.searchpatient);
  //Medicine Control
  router.get("/showmedicinefrom",control.showmedicine);
  router.get("/prescription",control.prescription);

@@ -1,155 +1,63 @@
 body {
-     background-image: url("formbg.jpeg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Montserrat', sans-serif;
-    height: 100vh;
-    margin: 0;
-    }
+  background-image: url("formbg.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  font-family: 'Montserrat', sans-serif;
+  margin: 0;
+  padding: 40px;
+}
 
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-     width: 60%;
-      padding-top: 24px;
-      /* align-items: center; */
-      border-radius: 20px;
-      
-      height: 500px;
-      
-    }
+.login-wrapper {
+  border-radius: 20px;
+  overflow: hidden;
+  max-width: 900px;
+  background-color: rgba(255, 255, 255, 0.9);
+}
 
-    .message-container {
-      flex: 1 1 45%;
-      padding: 20px;
-      text-align: center;
-      background-color: red;
-      height: 450px;
-      color: white;
-      border-top-left-radius: 20px;
-      border-bottom-left-radius: 20px;  
-      padding-top: 17%;
-    }
+/* Left Box */
+.message-container {
+  flex: 1 1 45%;
+  background-color: #f1221a; /* Bootstrap danger */
+  min-height: 450px;
+  text-align: center;
+}
 
-    
+.message-container h2 {
+  font-size: 2.5rem;
+}
 
-    .message-container h2 {
-      font-size: 3rem;
-    }
+.message-container p {
+  font-size: 1rem;
+}
 
-    .message-container p {
-      font-size: 0.9rem;
-      color: #eae1e1;
-    }
+/* Right Box */
+.form-container {
+  flex: 1 1 55%;
+  min-height: 450px;
+}
 
-    .form-container {
-      flex: 1 1 45%;
-      background: white;
-       height: 450px;
-      padding: 30px;
-       border-top-right-radius: 20px;
-      border-bottom-right-radius: 20px; 
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
+.form-container h1 {
+  font-size: 2rem;
+}
 
-    .form-container h1 {
-      font-size: 2.1rem; 
-      
-      border: 2px solidn black;
-      /* margin-bottom: 20px; */
-    }
+@media (max-width: 768px) {
+  body{
+    padding: 0;
+  }
+  .login-wrapper {
+    flex-direction: column;
+    border-radius: 0;
+  }
 
-    .form-container label h6 {
-      font-size: 1.2rem;
-      margin-top: 10px;
-       
-    }
+  .message-container,
+  .form-container {
+    width: 100%;
+    min-height: auto;
+  }
 
-    .form-container input,
-    .form-select {
-      width: 100%;
-       padding: 6px;
-      font-size: 1.0rem;
-      margin-bottom: 15px;
-      border-radius: 5px;
-    }
-
-    .form-container button {
-      width: 100%;
-      padding: 10px;
-      font-size: 1.0rem;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 8px;
-    }
-
-    .form-container #lo {
-      display: block;
-      margin-top: 15px;
-      color: red;
-      font-size: 1rem;
-    }
-
-    @media (max-width: 980px) {
-      .container {
-        width: 100%;
-        min-height: 100vh;
-        flex-direction: column;
-        padding: 20px;
-        display: block;
-        
-      }
-
-      .message-container,
-      .form-container {
-        width: 100%;
-        height: 200px;
-        text-align: center;
-      }
-
-      .message-container
-      {
-        padding-top:30px ;
-        border-top-right-radius: 20px;
-        border-bottom-left-radius: 0px;
-      }
-      .form-container{
-        min-height: 100vh;
-        border-top-right-radius: 0px;
-        border-bottom:20px ;
-      }
-
-      .message-container h2 {
-        font-size: 2.5rem;
-      }
-
-      .message-container p {
-        font-size: 1rem;
-      }
-
-      .form-container h1 {
-        font-size: 2rem;
-      }
-
-      .form-container label h6 {
-        font-size: 1.1rem;
-        
-      }
-
-      .form-container input,
-      .form-select {
-        font-size: 1rem;
-        padding: 10px;
-      }
-
-      .form-container label{
-       
-       text-align: start;
-        width: 100%;
-      }
-    }
+  .message-container {
+    padding-top: 20px;
+    border-radius: 0;
+  }
+}

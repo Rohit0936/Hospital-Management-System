@@ -7,43 +7,21 @@ class login{
        
         let flag;
         try{
-            let flag= await model.loginuser(username,password,role)
-           // console.log(flag);
-            if(flag.name==="admin")
+            let flag= await model.loginuser(username,role)
+          // console.log(flag);
+            let result=bcrypt.compareSync(password,flag.pass);
+            if(result)
             {
-                return flag
+                return flag=flag.data;
             }
-            else if(flag.ro==="Reception")
-            {
-              //  console.log(flag.role);
-                let result=bcrypt.compareSync(password,flag.passwo);
-                //console.log(result);
-                if(result)
-                {
-                    return  flag
-                }
-                else{
-                   
-                    return flag=[];
-                }
+            else{
+                return flag=[];
             }
-            else
-            {
-                let result=bcrypt.compareSync(password,flag.passwo)
-
-                if(result)
-                {
-                    return  flag
-                }
-                else{
-                    return flag=[];
-                }
-            }
-         
+           
         }
         catch(err)
         {
-           // console.log(err);
+            console.log(err);
             return flag
         }
 }

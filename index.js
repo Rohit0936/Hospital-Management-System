@@ -1,7 +1,7 @@
 let app=require("./src/app.js");
 
 
-app.listen(2000,()=>{
+app.listen(process.env.PORT,()=>{
   console.log("Server started");
 });
 

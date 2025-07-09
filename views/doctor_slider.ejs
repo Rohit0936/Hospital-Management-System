@@ -75,8 +75,8 @@
 
 <!-- Sidebar -->
 <div id="sidebar" class="sidebar">
-  <img src="<%= data[1] %>" alt="Doctor" />
-  <div class="doctor-name">Dr. <%= data[0] %></div>
+  <img src="<%= data.image %>" alt="Doctor" />
+  <div class="doctor-name">Dr. <%= data.name %></div>
 
   <ul class="nav nav-pills flex-column my-4">
     <li class="nav-item">
@@ -85,7 +85,7 @@
       </a>
     </li>
     <li>
-      <a href="/showdocpatient" class="nav-link text-white">
+      <a href="/showdocpatient?s=n" class="nav-link text-white">
         <i class="fas fa-user-injured me-2"></i> Patients
       </a>
     </li>

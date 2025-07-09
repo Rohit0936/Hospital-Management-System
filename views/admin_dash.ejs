@@ -172,6 +172,23 @@
   justify-content: center;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
+  .sidebar img {
+      display: block;
+      margin: 0 auto;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #facc15;
+    }
+
+    .admin-name {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 10px;
+      font-size: 16px;
+      color: #facc15;
+    }
 
 /* Show Mobile Bar only on small screens */
 @media (max-width: 768px) {
@@ -222,9 +239,11 @@
   <!-- Sidebar -->
   <div class="sidebar">
     <h4><i class="fas fa-hospital"></i> Admin Panel</h4>
+    <img src="<%= data.admin_Image%>" alt="Doctor" />
+  <div class="admin-name"> <%= data.Name%></div>
     <ul class="nav flex-column">
       <li class="nav-item">
-        <a class="nav-link" href="/admindashbord"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a class="nav-link" href="/"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
       </li>
 
       <!-- Doctors -->
@@ -244,11 +263,11 @@
       </div>
 
       <li class="nav-item">
-        <a class="nav-link" href="/showpatients"><i class="fas fa-users"></i> Patients</a>
+        <a class="nav-link" href="/show_patient?s=n"><i class="fas fa-users"></i> Patients</a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" href="/"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
       </li>
     </ul>
   </div>

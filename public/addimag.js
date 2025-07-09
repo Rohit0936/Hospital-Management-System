@@ -7,7 +7,7 @@ function addimg(event){
    img.src=temp;
    
    image.appendChild(img);
-   console.log("hello",temp);
+  // console.log("hello",temp);
 }
 
 function upimage(event){

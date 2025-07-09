@@ -49,8 +49,9 @@ body {
   box-shadow: 0 0 8px #facc15;
 }
 
-.navbar-nav {
-  margin: 0 auto;
+#bt{
+  /* margin:0px; */
+  gap: 10px;
   align-items: center;
 }
 
@@ -267,6 +268,17 @@ body {
   border-top-right-radius: 15px;
   height: 200px;
   object-fit: cover;
+}
+
+.specialties-section .card-img-top {
+  height: 200px;
+  object-fit: cover;
+}
+.specialties-section .card {
+  transition: transform 0.3s;
+}
+.specialties-section .card:hover {
+  transform: scale(1.05);
 }
 
 /* Footer Section */
