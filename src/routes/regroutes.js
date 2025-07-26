@@ -81,4 +81,5 @@ router.get("/searchrecep",control.searchrecep);
  router.get("/updatepatientstatus",control.updatepatientstatus);
  router.get("/bill",control.bill);
  router.post("/sumitbill",control.submitbill);
+ 
 module.exports=router; 

@@ -115,7 +115,7 @@ function compare(str){
 
 function submitfrom()
 {
-    console.log(flag1+" "+flag2+" "+flag3+" "+flag4);
+    // console.log(flag1+" "+flag2+" "+flag3+" "+flag4);
     if(flag1 && flag2 && flag3 && flag4)
     {
        return true;

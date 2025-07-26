@@ -36,6 +36,20 @@ key(Did) references Doctor(did) on update cascade on delete cascade,Status enum(
 ------------------------------------------------------------------------------------------------------------------
 
 CREATE TABLE medicine (mid INT PRIMARY KEY,medicine_name VARCHAR(100),price DECIMAL(10,2));
+
+INSERT INTO medicine (mid, medicine_name, price)
+VALUES 
+  (1, 'Paracetamol', 50.00),
+  (2, 'Ibuprofen', 65.75),
+  (3, 'Amoxicillin', 120.00),
+  (4, 'Cetirizine', 55.00),
+  (5, 'Azithromycin', 145.00),
+  (6, 'Dolo 650', 60.00),
+  (7, 'Metformin', 80.50),
+  (8, 'Pantoprazole', 110.00),
+  (9, 'Aspirin', 95.25),
+  (10, 'Ciprofloxacin', 175.00);
+
 ------------------------------------------------------------------------------------------------------------------
 
 create table bill(bill_id int primary key auto_increment,pid int, foreign key(pid) references patientdetail(pid) 
@@ -52,11 +66,15 @@ mysql> create trigger deletepatient after delete on patientdetail
      end//
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-create trigger updatepatient after update on patientdetail
-     for each row
+ create trigger updatepatient After update on patientdetail
+ for each row
      begin
-     if(old.room_id!=new.room_id) then
-     update room set room_status="true" where room_id=old.room_id;
-     update room set room_status="false" where room_id=new.room_id;
-     end if;
-     end //
+      IF (OLD.room_id != NEW.room_id) THEN
+             UPDATE room SET room_status = 'true' WHERE room_id = OLD.room_id;
+             UPDATE room SET room_status = 'false' WHERE room_id = NEW.room_id;
+         END IF;
+    
+         IF (NEW.status = 'Discharge') THEN
+             UPDATE room SET room_status = 'true' WHERE room_id = OLD.room_id;
+         END IF;
+     end //
