@@ -317,7 +317,7 @@ function nurse(str)
                             div4.appendChild(a);
             
                             a=document.createElement("a");
-                            a.setAttribute("href","/deletenurse?nid="+item.uid);
+                            a.setAttribute("href","/deletenurse?nid="+item.nid);
                             a.setAttribute("class","btn btn-outline-danger btn-sm px-3");
                             i=document.createElement("i");
                             i.setAttribute("class","fas fa-trash me-1");

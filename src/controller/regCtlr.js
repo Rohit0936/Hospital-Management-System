@@ -544,7 +544,7 @@ exports.finalnurseupdate=(req,res)=>{
 exports.deleteNurse=(req,res)=>{
 
     let id=req.query.nid;
-
+    
     let flag=model.deleteNurse(id)
     flag.then((r)=>{
         res.redirect("/show_nurse");
