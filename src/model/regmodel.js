@@ -770,11 +770,12 @@ exports.show_patient = (aid,s) => {
        })
 }
 
+let roomid;
 exports.updatepatient = (id,aid) => {
 
        return new Promise((resolve, reject) => {
 
-              conn.query("select patient_name as 'pname',patient_age as age,patient_gender as gender,patient_contact as 'contact',room_no,room_type as 'roomtype',nurse_name as 'nname',doctor_name as 'dname',patient_issue as 'issue',p.nid,p.did,p.room_id,bill from patientdetail p inner join Doctor d on d.did=p.Did inner join nurse n on n.nid=p.nid inner join room r on r.room_id=p.room_id where pid=? && p.aid=?", [id,aid], (err, result) => {
+              conn.query("select patient_name as 'pname',patient_age as age,patient_gender as gender,patient_contact as 'contact',r.room_id,room_no,room_type as 'roomtype',nurse_name as 'nname',doctor_name as 'dname',patient_issue as 'issue',p.nid,p.did,p.room_id,bill from patientdetail p inner join Doctor d on d.did=p.Did inner join nurse n on n.nid=p.nid inner join room r on r.room_id=p.room_id where pid=? && p.aid=?", [id,aid], (err, result) => {
                      if (err) {
                             reject(err)
                      }
@@ -798,7 +799,8 @@ exports.updatepatient = (id,aid) => {
                                                                       reject(err);
                                                                }
                                                                else {
-
+                                                                      roomid=result[0].room_id;
+                                                                      //console.log(roomid);
                                                                       resolve({ nurse: result1, room: result2, doctor: result3, p: result[0] });
                                                                }
 
@@ -821,6 +823,16 @@ exports.finalupdatepatient = (...data) => {
                             reject(err);
                      }
                      else {
+                           // console.log(data[5]);
+                            conn.query("call patientdetail(?,?)",[roomid,data[5]],(err,result1)=>{
+                                   if(err)
+                                   {
+                                          reject(err);
+                                   }
+                                   else{
+                                          resolve(result1);
+                                   }
+                            })
                      }
               })
        });
@@ -836,7 +848,18 @@ exports.deletepatient = (id) => {
                             reject(err);
                      }
                      else {
-                            resolve(result);
+                            conn.query("call patientdetail(?,'0')",[id],(err,result)=>{
+                                   if(err)
+                                   {
+                                          reject(err)
+
+                                   }
+                                   else{
+                                         // console.log(id);
+                                          resolve(result);
+                                   }
+                            })
+                            
                      }
               })
        })
