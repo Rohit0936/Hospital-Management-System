@@ -365,9 +365,11 @@ exports.showrec = (aid) => {
 
        return new Promise((resolve, reject) => {
 
-              conn.query("select *from reception where aid=?", [aid], (err, result) => {
+              conn.query("select *from Reception where aid=?", [aid], (err, result) => {
                      if (err) {
+                            console.log(err);
                             reject(err);
+                            
                      }
                      else {
                             resolve(result);
