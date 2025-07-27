@@ -842,20 +842,20 @@ exports.deletepatient = (id) => {
 
        return new Promise((resolve, reject) => {
 
-              conn.query("delete from patientdetail where pid=?", [id], (err, result) => {
+              conn.query("select * from patientdetail where pid=?", [id], (err, result) => {
 
                      if (err) {
                             reject(err);
                      }
                      else {
-                            conn.query("call patientdetail(?,'0')",[id],(err,result)=>{
+                            conn.query("call deletepatient(?,?)",[result[0].room_id,result[0].pid],(err,result1)=>{
                                    if(err)
                                    {
                                           reject(err)
 
                                    }
                                    else{
-                                         // console.log(id);
+                                          //console.log(result1[0]);
                                           resolve(result);
                                    }
                             })
