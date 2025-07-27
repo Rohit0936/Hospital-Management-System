@@ -22,7 +22,7 @@ exports.show = (id) => {
                                    })
                             }
                             else if (result1[0].role === 'Doctor') {
-                                   conn.query("select *from doctor where did=?", [id], (err, result) => {
+                                   conn.query("select *from Doctor where did=?", [id], (err, result) => {
                                           if (err) {
                                                  reject(err);
                                           }
@@ -32,7 +32,7 @@ exports.show = (id) => {
                                    })
                             }
                             else {
-                                   conn.query("select *from reception where uid=?", [id], (err, result) => {
+                                   conn.query("select *from Reception where uid=?", [id], (err, result) => {
                                           if (err) {
                                                  reject(err);
                                           }
@@ -74,7 +74,7 @@ exports.loginuser = (username, department) => {
                                    })
                             }
                             else if (result1[0].Role === 'Doctor') {
-                                   conn.query("select *from doctor where uid=?", [result1[0].uid], (err, result) => {
+                                   conn.query("select *from Doctor where uid=?", [result1[0].uid], (err, result) => {
                                           if (err) {
                                                  reject(err);
                                           }
@@ -85,7 +85,7 @@ exports.loginuser = (username, department) => {
                                    })
                             }
                             else {
-                                   conn.query("select *from reception where uid=?", [result1[0].uid], (err, result) => {
+                                   conn.query("select *from Reception where uid=?", [result1[0].uid], (err, result) => {
                                           if (err) {
                                                  reject(err);
                                           }
@@ -695,7 +695,7 @@ exports.getallrnd = (aid) => {
                                           reject(err);
                                    }
                                    else {
-                                          conn.query("select Did,doctor_name from doctor where aid=?",[aid], (err, result3) => {
+                                          conn.query("select Did,doctor_name from Doctor where aid=?",[aid], (err, result3) => {
                                                  if (err) {
                                                         console.log(err);
                                                         reject(err);
@@ -847,7 +847,7 @@ exports.showdocpatient = (no,id, aid) => {
        return new Promise((resolve, reject) => {
           if(no==='Admit' || no==='Discharge')
           {
-              conn.query("select *from patientdetail where status=? && did=(select did from doctor where uid=?) && aid=?", [no,id, aid], (err, result) => {
+              conn.query("select *from patientdetail where status=? && did=(select did from Doctor where uid=?) && aid=?", [no,id, aid], (err, result) => {
                      if (err) {
                             reject(err);
                      }
@@ -857,7 +857,7 @@ exports.showdocpatient = (no,id, aid) => {
               })   
           }
           else{
-              conn.query("select *from patientdetail where did=(select did from doctor where uid=?) && aid=?", [id, aid], (err, result) => {
+              conn.query("select *from patientdetail where did=(select did from Doctor where uid=?) && aid=?", [id, aid], (err, result) => {
                      if (err) {
                             reject(err);
                      }
