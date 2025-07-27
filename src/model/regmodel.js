@@ -745,7 +745,7 @@ exports.show_patient = (aid,s) => {
        return new Promise((resolve, reject) => {
           if(s==='Admit' || s==='Discharge')
           {
-              conn.query("select pid,patient_name as 'pname',patient_age as age,patient_gender as gender,patient_contact as 'Contact',admitted_date as admit,discharge_date as 'discharge',room_no,room_type as 'roomtype',nurse_name as 'nname',doctor_name as 'dname',p.status as 'status',bill from patientdetail p inner join doctor d on d.did=p.Did inner join nurse n on n.nid=p.nid inner join room r on r.room_id=p.room_id where p.aid=? && status=?",[aid,s],(err, result) => {
+              conn.query("select pid,patient_name as 'pname',patient_age as age,patient_gender as gender,patient_contact as 'Contact',admitted_date as admit,discharge_date as 'discharge',room_no,room_type as 'roomtype',nurse_name as 'nname',doctor_name as 'dname',p.status as 'status',bill from patientdetail p inner join Doctor d on d.did=p.Did inner join nurse n on n.nid=p.nid inner join room r on r.room_id=p.room_id where p.aid=? && status=?",[aid,s],(err, result) => {
                      if (err) {
                             console.log(err);
                             reject(err);
@@ -756,7 +756,7 @@ exports.show_patient = (aid,s) => {
               })
           }
           else{
-              conn.query("select pid,patient_name as 'pname',patient_age as age,patient_gender as gender,patient_contact as 'Contact',admitted_date as admit,discharge_date as 'discharge',room_no,room_type as 'roomtype',nurse_name as 'nname',doctor_name as 'dname',p.status as 'status',bill from patientdetail p inner join doctor d on d.did=p.Did inner join nurse n on n.nid=p.nid inner join room r on r.room_id=p.room_id where p.aid=?",[aid],(err, result) => {
+              conn.query("select pid,patient_name as 'pname',patient_age as age,patient_gender as gender,patient_contact as 'Contact',admitted_date as admit,discharge_date as 'discharge',room_no,room_type as 'roomtype',nurse_name as 'nname',doctor_name as 'dname',p.status as 'status',bill from patientdetail p inner join Doctor d on d.did=p.Did inner join nurse n on n.nid=p.nid inner join room r on r.room_id=p.room_id where p.aid=?",[aid],(err, result) => {
                      if (err) {
                             console.log(err);
                             reject(err);
