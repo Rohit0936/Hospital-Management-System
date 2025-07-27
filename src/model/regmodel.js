@@ -279,7 +279,7 @@ exports.deletedoc = (id) => {
                             console.log(err);
                      }
                      else {
-                            conn.query("select *from doctor", (err, result) => {
+                            conn.query("select *from Doctor", (err, result) => {
                                    if (err) {
                                           reject(err);
                                    }
@@ -295,7 +295,7 @@ exports.deletedoc = (id) => {
 exports.searchdoc = (na, aid) => {
 
        return new Promise((resolve, reject) => {
-              conn.query("select *from doctor where Doctor_name  like '%" + na + "%' && aid=? ", [aid], (err, result) => {
+              conn.query("select *from Doctor where Doctor_name  like '%" + na + "%' && aid=? ", [aid], (err, result) => {
 
                      if (err) {
 
