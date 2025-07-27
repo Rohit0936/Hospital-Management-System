@@ -224,7 +224,7 @@ exports.showDoctor = (show, aid) => {
 exports.updatdoc = (id) => {
        return new Promise((resolve, reject) => {
 
-              conn.query("select *from doctor where Did=?", [id], (err, result) => {
+              conn.query("select *from Doctor where Did=?", [id], (err, result) => {
 
                      if (err) {
                             reject(err);
@@ -240,7 +240,7 @@ exports.finalupdatedoc = (name, email, specialization, contact, experience, uid)
 
 
        return new Promise((resolve, reject) => {
-              conn.query("update doctor set doctor_name=?,doctor_email=?,doctor_specialization=?,doctor_contact=?,doctor_Experience=? where did=?", [name, email, specialization, contact, experience, uid], (err, result) => {
+              conn.query("update Doctor set doctor_name=?,doctor_email=?,doctor_specialization=?,doctor_contact=?,doctor_Experience=? where did=?", [name, email, specialization, contact, experience, uid], (err, result) => {
                      if (err) {
                             console.log(err);
                             reject(err);
