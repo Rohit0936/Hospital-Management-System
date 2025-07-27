@@ -382,7 +382,7 @@ exports.recepudate = (...user) => {
 
        return new Promise((resolve, reject) => {
 
-              conn.query("update reception set reception_name=?,reception_email=?,reception_contact=? where rid=?", [user[0], user[1], user[2], user[3]], (err, result) => {
+              conn.query("update Reception set reception_name=?,reception_email=?,reception_contact=? where rid=?", [user[0], user[1], user[2], user[3]], (err, result) => {
 
                      if (err) {
                             console.log(err);
@@ -415,7 +415,7 @@ exports.recepdelete = (id) => {
 exports.searchrecep = (na, aid) => {
 
        return new Promise((resolve, reject) => {
-              conn.query("select *from reception where reception_name like '%" + na + "%' && aid=?", [aid], (err, result) => {
+              conn.query("select *from Reception where reception_name like '%" + na + "%' && aid=?", [aid], (err, result) => {
 
                      if (err) {
                             console.log(err);
