@@ -792,7 +792,7 @@ exports.updatepatient = (id,aid) => {
                                                         reject(err);
                                                  }
                                                  else {
-                                                        conn.query("select Did,doctor_name from doctor where aid=?",[aid],(err, result3) => {
+                                                        conn.query("select Did,doctor_name from Doctor where aid=?",[aid],(err, result3) => {
                                                                if (err) {
                                                                       console.log(err);
                                                                       reject(err);
