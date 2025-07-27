@@ -774,7 +774,7 @@ exports.updatepatient = (id,aid) => {
 
        return new Promise((resolve, reject) => {
 
-              conn.query("select patient_name as 'pname',patient_age as age,patient_gender as gender,patient_contact as 'contact',room_no,room_type as 'roomtype',nurse_name as 'nname',doctor_name as 'dname',patient_issue as 'issue',p.nid,p.did,p.room_id,bill from patientdetail p inner join doctor d on d.did=p.Did inner join nurse n on n.nid=p.nid inner join room r on r.room_id=p.room_id where pid=? && p.aid=?", [id,aid], (err, result) => {
+              conn.query("select patient_name as 'pname',patient_age as age,patient_gender as gender,patient_contact as 'contact',room_no,room_type as 'roomtype',nurse_name as 'nname',doctor_name as 'dname',patient_issue as 'issue',p.nid,p.did,p.room_id,bill from patientdetail p inner join Doctor d on d.did=p.Did inner join nurse n on n.nid=p.nid inner join room r on r.room_id=p.room_id where pid=? && p.aid=?", [id,aid], (err, result) => {
                      if (err) {
                             reject(err)
                      }
