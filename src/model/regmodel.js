@@ -966,7 +966,7 @@ exports.bill = (id) => {
 
        return new Promise((resolve, reject) => {
 
-              conn.query("select pid,doctor_name,doctor_specialization,patient_name,patient_contact,admitted_date,room_no,room_charges from patientdetail p inner join doctor d on d.did=p.did inner join room r on r.room_id=p.room_id where pid=?", [id], (err, result) => {
+              conn.query("select pid,doctor_name,doctor_specialization,patient_name,patient_contact,admitted_date,room_no,room_charges from patientdetail p inner join Doctor d on d.did=p.did inner join room r on r.room_id=p.room_id where pid=?", [id], (err, result) => {
                      if (err) {
                             reject(err);
                      }
@@ -1039,7 +1039,7 @@ exports.searchdocpatient=(str,aid,uid)=>{
 exports.searchpatient=(str,aid)=>{
          return new Promise((resolve, reject) => {
 
-              conn.query("select pid,patient_name as 'pname',patient_age as age,patient_gender as gender,patient_contact as 'Contact',admitted_date as admit,discharge_date as 'discharge',room_no,room_type as 'roomtype',nurse_name as 'nname',doctor_name as 'dname',p.status as 'status',bill from patientdetail p inner join doctor d on d.did=p.Did inner join nurse n on n.nid=p.nid inner join room r on r.room_id=p.room_id where p.aid=? && (patient_name like '%"+str+"%' || patient_contact like '%"+str+"%') ",[aid],(err, result) => {
+              conn.query("select pid,patient_name as 'pname',patient_age as age,patient_gender as gender,patient_contact as 'Contact',admitted_date as admit,discharge_date as 'discharge',room_no,room_type as 'roomtype',nurse_name as 'nname',doctor_name as 'dname',p.status as 'status',bill from patientdetail p inner join Doctor d on d.did=p.Did inner join nurse n on n.nid=p.nid inner join room r on r.room_id=p.room_id where p.aid=? && (patient_name like '%"+str+"%' || patient_contact like '%"+str+"%') ",[aid],(err, result) => {
                      if (err) {
                             console.log(err);
                             reject(err);
