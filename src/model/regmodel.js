@@ -247,7 +247,7 @@ exports.finalupdatedoc = (name, email, specialization, contact, experience, uid)
 
                      }
                      else {
-                            conn.query("select uid from doctor where did=?", [uid], (err, result) => {
+                            conn.query("select uid from Doctor where did=?", [uid], (err, result) => {
                                    if (err) {
 
                                           console.log(err);
